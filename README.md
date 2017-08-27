@@ -111,15 +111,10 @@ Current version 0.0.1.
 Please enter bumped version [0.0.2]:
 ```
 
-## Contributors
+## Contributing to the project
 
-Contributions are greatly appreciated. Before starting any work, please either comment on an existing issue, or file a new one.
-
-- The pull requests will be accepted into `develop` branch only
-- Try to make, and encourage, smaller pull requests
-- All modifications or additions should be tested
-
-We appreciate your help! Thank you for your understanding!
+See the [contribution guidelines](docs/CONTRIBUTING.md) for information on how to
+participate in the Kubernetes application project by submitting pull requests or issues.
 
 ## License
 
