@@ -7,17 +7,13 @@ package service
 import (
 	"fmt"
 
+	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/version"
-)
-
-const (
-	// SERVICENAME contains a service name prefix which used in ENV variables
-	SERVICENAME = "K8SAPP"
 )
 
 // Run starts the service
 func Run() (err error) {
-	fmt.Println(SERVICENAME, "Version:", version.RELEASE)
+	fmt.Println(config.SERVICENAME, "Version:", version.RELEASE)
 
 	return
 }
