@@ -1,0 +1,5 @@
+vendor
+certs
+Gopkg.lock
+.coverprofile
+bin
