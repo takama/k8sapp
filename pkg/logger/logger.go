@@ -80,5 +80,6 @@ type Config struct {
 // New returns new logger
 func New(cfg *Config) Logger {
 	// There should be any implementation which compatible with logger interface
+	// return newXLog(cfg)
 	return newStdLog(cfg)
 }
