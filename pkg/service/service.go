@@ -5,15 +5,21 @@
 package service
 
 import (
-	"fmt"
-
-	"github.com/takama/k8sapp/pkg/config"
+	"github.com/takama/k8sapp/pkg/logger"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
 // Run starts the service
 func Run() (err error) {
-	fmt.Println(config.SERVICENAME, "Version:", version.RELEASE)
+	// Setup logger
+	log := logger.New(&logger.Config{
+		Level: logger.LevelDebug,
+		Time:  true,
+		UTC:   true,
+	})
+
+	log.Info("Version:", version.RELEASE)
+	log.Warnf("%s log level is used", logger.LevelDebug.String())
 
 	return
 }
