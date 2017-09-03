@@ -21,8 +21,12 @@ BUILDTAGS=
 .PHONY: all
 all: build
 
+.PHONY: vendor
+vendor: clean bootstrap
+	dep ensure
+
 .PHONY: build
-build: clean bootstrap
+build: vendor
 	@echo "+ $@"
 	@CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} go build -a -installsuffix cgo \
 		-ldflags "-s -w -X ${PROJECT}/pkg/version.RELEASE=${RELEASE} -X ${PROJECT}/pkg/version.COMMIT=${COMMIT} -X ${PROJECT}/pkg/version.REPO=${REPO_INFO}" \
@@ -59,10 +63,14 @@ cover:
 clean:
 	@rm -f bin/${GOOS}-${GOARCH}/${APP}
 
+HAS_DEP := $(shell command -v dep;)
 HAS_LINT := $(shell command -v golint;)
 
 .PHONY: bootstrap
 bootstrap:
+ifndef HAS_DEP
+	go get -u github.com/golang/dep/cmd/dep
+endif
 ifndef HAS_LINT
 	go get -u github.com/golang/lint/golint
 endif

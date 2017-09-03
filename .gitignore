@@ -1,2 +1,4 @@
+vendor
+Gopkg.lock
 .coverprofile
 bin
