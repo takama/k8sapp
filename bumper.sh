@@ -39,6 +39,8 @@ fi
 
 if [ "${GO_OS}" == "darwin" ]; then
     sed -i '' -e "s/\(RELEASE?=\).*/\1$new_version/" Makefile
+    sed -i '' -e "s/\(# Version\)\(\s*\).*/\1 $new_version/" docs/CHANGELOG.md
 else
     sed -i -e "s/\(RELEASE?=\).*/\1$new_version/" Makefile
+    sed -i -e "s/\(# Version\)\(\s*\).*/\1 $new_version/" docs/CHANGELOG.md
 fi
