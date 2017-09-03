@@ -4,50 +4,66 @@ import (
 	"bytes"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/takama/k8sapp/pkg/config"
 )
+
+func logMessage(level Level, message string, out, err *bytes.Buffer, time, utc bool) {
+	log := New(&Config{
+		Level: LevelDebug,
+		Out:   out,
+		Err:   err,
+		Time:  time,
+		UTC:   utc,
+	})
+	switch level {
+	case LevelDebug:
+		log.Debug(message)
+	case LevelInfo:
+		log.Info(message)
+	case LevelWarn:
+		log.Warn(message)
+	case LevelError:
+		log.Error(message)
+	case LevelFatal:
+		log.Fatal(message)
+	}
+}
+
+func logMessagef(level Level, format, message string, out, err *bytes.Buffer, time, utc bool) {
+	log := New(&Config{
+		Level: LevelDebug,
+		Out:   out,
+		Err:   err,
+		Time:  time,
+		UTC:   utc,
+	})
+	switch level {
+	case LevelDebug:
+		log.Debugf(format, message)
+	case LevelInfo:
+		log.Infof(format, message)
+	case LevelWarn:
+		log.Warnf(format, message)
+	case LevelError:
+		log.Errorf(format, message)
+	case LevelFatal:
+		log.Fatalf(format, message)
+	}
+}
 
 func testOutput(t *testing.T, level Level, message string, formated bool) {
 	var want string
 	prefix := "[" + config.SERVICENAME + ":" + level.String() + "] "
 	out := &bytes.Buffer{}
 	err := &bytes.Buffer{}
-	log := New(&Config{
-		Level: LevelDebug,
-		Out:   out,
-		Err:   err,
-	})
 	if formated {
 		want = prefix + message + "\n"
-		switch level {
-		case LevelDebug:
-			log.Debug(message)
-		case LevelInfo:
-			log.Info(message)
-		case LevelWarn:
-			log.Warn(message)
-		case LevelError:
-			log.Error(message)
-		case LevelFatal:
-			log.Fatal(message)
-		}
+		logMessage(level, message, out, err, false, false)
 	} else {
 		want = prefix + "message=" + message + "\n"
 		format := "message=%s"
-		switch level {
-		case LevelDebug:
-			log.Debugf(format, message)
-		case LevelInfo:
-			log.Infof(format, message)
-		case LevelWarn:
-			log.Warnf(format, message)
-		case LevelError:
-			log.Errorf(format, message)
-		case LevelFatal:
-			log.Fatalf(format, message)
-		}
+		logMessagef(level, format, message, out, err, false, false)
 	}
 	if level == LevelDebug || level == LevelInfo || level == LevelWarn {
 		if got := out.String(); got != want {
@@ -67,6 +83,19 @@ func TestLog(t *testing.T) {
 	}
 }
 
+func checkEmptyMessage(t *testing.T, out *bytes.Buffer, messageLevel, outputlevel Level) {
+	if out.String() == "" {
+		t.Errorf("Got empty %s message for %s output level", messageLevel.String(), outputlevel.String())
+	}
+
+}
+
+func checkNonEmptyMessage(t *testing.T, out *bytes.Buffer, messageLevel, outputlevel Level) {
+	if out.String() != "" {
+		t.Errorf("Got non-empty %s message for %s output level", messageLevel.String(), outputlevel.String())
+	}
+}
+
 func testLevel(t *testing.T, level, messageLevel Level) {
 	out := &bytes.Buffer{}
 	err := &bytes.Buffer{}
@@ -81,55 +110,37 @@ func testLevel(t *testing.T, level, messageLevel Level) {
 		log.Debug(message)
 		switch level {
 		case LevelDebug:
-			if out.String() == "" {
-				t.Errorf("Got empty debug message for %s output level", level.String())
-			}
+			checkEmptyMessage(t, out, messageLevel, level)
 		default:
-			if out.String() != "" {
-				t.Errorf("Got non-empty debug message for %s output level", level.String())
-			}
+			checkNonEmptyMessage(t, out, messageLevel, level)
 		}
 	case LevelInfo:
 		log.Info(message)
 		switch level {
 		case LevelDebug, LevelInfo:
-			if out.String() == "" {
-				t.Errorf("Got empty info message for %s output level", level.String())
-			}
+			checkEmptyMessage(t, out, messageLevel, level)
 		default:
-			if out.String() != "" {
-				t.Errorf("Got non-empty info message for %s output level", level.String())
-			}
+			checkNonEmptyMessage(t, out, messageLevel, level)
 		}
 	case LevelWarn:
 		log.Warn(message)
 		switch level {
 		case LevelDebug, LevelInfo, LevelWarn:
-			if out.String() == "" {
-				t.Errorf("Got empty warn message for %s output level", level.String())
-			}
+			checkEmptyMessage(t, out, messageLevel, level)
 		default:
-			if out.String() != "" {
-				t.Errorf("Got non-empty warn message for %s output level", level.String())
-			}
+			checkNonEmptyMessage(t, out, messageLevel, level)
 		}
 	case LevelError:
 		log.Error(message)
 		switch level {
 		case LevelDebug, LevelInfo, LevelWarn, LevelError:
-			if err.String() == "" {
-				t.Errorf("Got empty error message for %s output level", level.String())
-			}
+			checkEmptyMessage(t, err, messageLevel, level)
 		default:
-			if err.String() != "" {
-				t.Errorf("Got non-empty error message for %s output level", level.String())
-			}
+			checkNonEmptyMessage(t, err, messageLevel, level)
 		}
 	case LevelFatal:
 		log.Fatal(message)
-		if err.String() == "" {
-			t.Errorf("Got empty fatal message for %s output level", level.String())
-		}
+		checkEmptyMessage(t, err, messageLevel, level)
 	}
 }
 
@@ -142,38 +153,19 @@ func TestLevel(t *testing.T) {
 }
 
 func testOutputWithTime(t *testing.T, level Level, message string) {
-	var want string
 	prefix := "[" + config.SERVICENAME + ":" + level.String() + "] "
+	want := prefix + "__TIME__ " + UTC + message + "\n"
 	out := &bytes.Buffer{}
 	err := &bytes.Buffer{}
-	log := New(&Config{
-		Level: LevelDebug,
-		Out:   out,
-		Err:   err,
-		Time:  true,
-		UTC:   true,
-	})
-	want = prefix + message + "\n"
-	switch level {
-	case LevelDebug:
-		log.Debug(message)
-	case LevelInfo:
-		log.Info(message)
-	case LevelWarn:
-		log.Warn(message)
-	case LevelError:
-		log.Error(message)
-	case LevelFatal:
-		log.Fatal(message)
-	}
+	logMessage(level, message, out, err, true, true)
 	if level == LevelDebug || level == LevelInfo || level == LevelWarn {
 		if got := out.String(); !strings.Contains(got, UTC) ||
-			!strings.Contains(got, time.Now().Format("2006/01/02")) {
+			!strings.Contains(got, prefix) || !strings.Contains(got, message) {
 			t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
 		}
 	} else {
 		if got := err.String(); !strings.Contains(got, UTC) ||
-			!strings.Contains(got, time.Now().Format("2006/01/02")) {
+			!strings.Contains(got, prefix) || !strings.Contains(got, message) {
 			t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
 		}
 	}

@@ -1,6 +1,12 @@
-# Version 0.2.0
+# Version 0.2.1
 
 [Documentation](README.md)
+
+## Changelog since 0.2.0
+
+### Tests
+
+- Simplify standard logger tests
 
 ## Changelog since 0.1.0
 
