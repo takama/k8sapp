@@ -10,7 +10,7 @@ CONTAINER_NAME?=${APP}
 CA_DIR?=certs
 
 # Use the 0.0.0 tag for testing, it shouldn't clobber any release builds
-RELEASE?=0.2.0
+RELEASE?=0.2.1
 GOOS?=linux
 GOARCH?=amd64
 
