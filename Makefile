@@ -4,9 +4,13 @@
 
 APP=k8sapp
 PROJECT=github.com/takama/k8sapp
+REGISTRY?=docker.io/takama
+CONTAINER_IMAGE?=${REGISTRY}/${APP}
+CONTAINER_NAME?=${APP}
+CA_DIR?=certs
 
 # Use the 0.0.0 tag for testing, it shouldn't clobber any release builds
-RELEASE?=0.0.0
+RELEASE?=0.0.1
 GOOS?=linux
 GOARCH?=amd64
 
@@ -26,11 +30,62 @@ vendor: clean bootstrap
 	dep ensure
 
 .PHONY: build
-build: vendor
+build: vendor test certs
 	@echo "+ $@"
 	@CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} go build -a -installsuffix cgo \
 		-ldflags "-s -w -X ${PROJECT}/pkg/version.RELEASE=${RELEASE} -X ${PROJECT}/pkg/version.COMMIT=${COMMIT} -X ${PROJECT}/pkg/version.REPO=${REPO_INFO}" \
 		-o bin/${GOOS}-${GOARCH}/${APP} ${PROJECT}/cmd
+	docker build --pull -t $(CONTAINER_IMAGE):$(RELEASE) .
+
+.PHONY: certs
+certs:
+ifeq ("$(wildcard $(CA_DIR)/ca-certificates.crt)","")
+	@echo "+ $@"
+	@docker run --name ${CONTAINER_NAME}-certs -d alpine:edge sh -c "apk --update upgrade && apk add ca-certificates && update-ca-certificates"
+	@docker wait ${CONTAINER_NAME}-certs
+	@docker cp ${CONTAINER_NAME}-certs:/etc/ssl/certs/ca-certificates.crt ${CA_DIR}
+	@docker rm -f ${CONTAINER_NAME}-certs
+endif
+
+.PHONY: push
+push: build
+	@echo "+ $@"
+	@docker push $(CONTAINER_IMAGE):$(RELEASE)
+
+.PHONY: run
+run: build
+	@echo "+ $@"
+	@docker run --name ${CONTAINER_NAME} \
+		-d $(CONTAINER_IMAGE):$(RELEASE)
+	@sleep 1
+	@docker logs ${CONTAINER_NAME}
+
+HAS_RUNNED := $(shell docker ps | grep ${CONTAINER_NAME})
+HAS_EXITED := $(shell docker ps -a | grep ${CONTAINER_NAME})
+
+.PHONY: logs
+logs:
+	@echo "+ $@"
+	@docker logs ${CONTAINER_NAME}
+
+.PHONY: stop
+stop:
+ifdef HAS_RUNNED
+	@echo "+ $@"
+	@docker stop ${CONTAINER_NAME}
+endif
+
+.PHONY: start
+start: stop
+	@echo "+ $@"
+	@docker start ${CONTAINER_NAME}
+
+.PHONY: rm
+rm:
+ifdef HAS_EXITED
+	@echo "+ $@"
+	@docker rm ${CONTAINER_NAME}
+endif
 
 GO_LIST_FILES=$(shell go list ${PROJECT}/... | grep -v vendor)
 
@@ -60,7 +115,7 @@ cover:
 	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
 .PHONY: clean
-clean:
+clean: stop rm
 	@rm -f bin/${GOOS}-${GOARCH}/${APP}
 
 HAS_DEP := $(shell command -v dep;)
