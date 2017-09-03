@@ -1,6 +1,10 @@
 package service
 
-func ExampleRun() {
-	Run()
-	// Output: K8SAPP Version: UNKNOWN
+import "testing"
+
+func TestRun(t *testing.T) {
+	err := Run()
+	if err != nil {
+		t.Errorf("Fail, got '%s', want '%v'", err, nil)
+	}
 }
