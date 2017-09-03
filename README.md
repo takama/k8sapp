@@ -1,7 +1,7 @@
 # Kubernetes application
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/takama/k8sapp/issues)
-[![Go Report Card](https://goreportcard.com/badge/github.com/k8s-community/charts)](https://goreportcard.com/report/github.com/takama/k8sapp)
+[![Go Report Card](https://goreportcard.com/badge/github.com/takama/k8sapp)](https://goreportcard.com/report/github.com/takama/k8sapp)
 
 A sample application that meets the requirements for successful execution in Kubernetes.
 
