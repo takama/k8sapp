@@ -1,9 +1,9 @@
 # Kubernetes application
 
-[![Build Status](https://travis-ci.org/takama/k8sapp.svg?branch=feature%2Fsetup_travis_codecov)](https://travis-ci.org/takama/k8sapp)
+[![Build Status](https://travis-ci.org/takama/k8sapp.svg?branch=master)](https://travis-ci.org/takama/k8sapp)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/takama/k8sapp/issues)
 [![Go Report Card](https://goreportcard.com/badge/github.com/takama/k8sapp)](https://goreportcard.com/report/github.com/takama/k8sapp)
-[![codecov](https://codecov.io/gh/takama/k8sapp/branch/develop/graph/badge.svg)](https://codecov.io/gh/takama/k8sapp)
+[![codecov](https://codecov.io/gh/takama/k8sapp/branch/master/graph/badge.svg)](https://codecov.io/gh/takama/k8sapp)
 
 A sample application that meets the requirements for successful execution in Kubernetes.
 
