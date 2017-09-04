@@ -95,7 +95,7 @@ fmt:
 	@go list -f '{{if len .TestGoFiles}}"gofmt -s -l {{.Dir}}"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
 .PHONY: lint
-lint:
+lint: bootstrap
 	@echo "+ $@"
 	@go list -f '{{if len .TestGoFiles}}"golint -min_confidence=0.85 {{.Dir}}/..."{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
@@ -105,14 +105,15 @@ vet:
 	@go vet ${GO_LIST_FILES}
 
 .PHONY: test
-test: fmt lint vet
+test: vendor fmt lint vet
 	@echo "+ $@"
-	@go test -v -race -tags "$(BUILDTAGS) cgo" ${GO_LIST_FILES}
+	@go test -v -race -cover -tags "$(BUILDTAGS) cgo" ${GO_LIST_FILES}
 
 .PHONY: cover
 cover:
 	@echo "+ $@"
-	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
+	@> coverage.txt
+	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} && cat {{.Dir}}/.coverprofile  >> coverage.txt"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
 .PHONY: clean
 clean: stop rm
