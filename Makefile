@@ -95,7 +95,7 @@ fmt:
 	@go list -f '{{if len .TestGoFiles}}"gofmt -s -l {{.Dir}}"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
 .PHONY: lint
-lint:
+lint: bootstrap
 	@echo "+ $@"
 	@go list -f '{{if len .TestGoFiles}}"golint -min_confidence=0.85 {{.Dir}}/..."{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
