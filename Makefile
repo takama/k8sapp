@@ -105,7 +105,7 @@ vet:
 	@go vet ${GO_LIST_FILES}
 
 .PHONY: test
-test: fmt lint vet
+test: vendor fmt lint vet
 	@echo "+ $@"
 	@go test -v -race -cover -tags "$(BUILDTAGS) cgo" ${GO_LIST_FILES}
 
