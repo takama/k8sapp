@@ -1,7 +1,9 @@
 # Kubernetes application
 
+[![Build Status](https://travis-ci.org/takama/k8sapp.svg?branch=master)](https://travis-ci.org/takama/k8sapp)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/takama/k8sapp/issues)
 [![Go Report Card](https://goreportcard.com/badge/github.com/takama/k8sapp)](https://goreportcard.com/report/github.com/takama/k8sapp)
+[![codecov](https://codecov.io/gh/takama/k8sapp/branch/master/graph/badge.svg)](https://codecov.io/gh/takama/k8sapp)
 
 A sample application that meets the requirements for successful execution in Kubernetes.
 
@@ -91,7 +93,7 @@ ENV K8SAPP_LOG_LEVEL 0
 
 EXPOSE $K8SAPP_LOCAL_PORT
 
-COPY ca-certificates.crt /etc/ssl/certs/
+COPY certs /etc/ssl/
 COPY bin/linux/k8sapp /
 
 CMD ["/k8sapp"]
