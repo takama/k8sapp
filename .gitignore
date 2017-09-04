@@ -2,4 +2,5 @@ vendor
 certs
 Gopkg.lock
 .coverprofile
+coverage.txt
 bin

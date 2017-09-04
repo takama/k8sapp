@@ -107,12 +107,13 @@ vet:
 .PHONY: test
 test: fmt lint vet
 	@echo "+ $@"
-	@go test -v -race -tags "$(BUILDTAGS) cgo" ${GO_LIST_FILES}
+	@go test -v -race -cover -tags "$(BUILDTAGS) cgo" ${GO_LIST_FILES}
 
 .PHONY: cover
 cover:
 	@echo "+ $@"
-	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
+	@> coverage.txt
+	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} && cat {{.Dir}}/.coverprofile  >> coverage.txt"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
 .PHONY: clean
 clean: stop rm
