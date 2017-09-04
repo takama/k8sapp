@@ -93,7 +93,7 @@ ENV K8SAPP_LOG_LEVEL 0
 
 EXPOSE $K8SAPP_LOCAL_PORT
 
-COPY ca-certificates.crt /etc/ssl/certs/
+COPY certs /etc/ssl/
 COPY bin/linux/k8sapp /
 
 CMD ["/k8sapp"]
