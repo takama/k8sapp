@@ -1,6 +1,13 @@
-# Version 0.2.1
+# Version 0.2.2
 
 [Documentation](README.md)
+
+## Changelog since 0.2.1
+
+### Tests
+
+- Added Travis CI [travis-ci.org](https://travis-ci.org/takama/k8sapp)
+- Added code coverage data/bot [codecov.io](https://codecov.io/gh/takama/k8sapp)
 
 ## Changelog since 0.2.0
 
