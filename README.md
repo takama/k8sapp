@@ -48,6 +48,16 @@ type Logger interface {
 }
 ```
 
+Just make your choice
+
+```go
+func New(cfg *Config) Logger {
+    // return newLogrus(cfg)
+    // return newXLog(cfg)
+    return newStdLog(cfg)
+}
+```
+
 ## System signals
 
 The application includes the ability to intercept system signals and transfer control to special methods for graceful shutdown.
