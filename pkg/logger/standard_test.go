@@ -8,6 +8,20 @@ import (
 	"github.com/takama/k8sapp/pkg/config"
 )
 
+func TestNewLog(t *testing.T) {
+	config := &Config{}
+	New(config)
+	if config.Level != LevelDebug {
+		t.Errorf("Invalid level, got %s, want %s", config.Level, LevelDebug)
+	}
+	if config.Out == nil {
+		t.Error("Invalid logger output, got nil, want os.Stdout")
+	}
+	if config.Err == nil {
+		t.Error("Invalid logger error output, got nil, want os.Stderr")
+	}
+}
+
 func logMessage(level Level, message string, out, err *bytes.Buffer, time, utc bool) {
 	log := New(&Config{
 		Level: LevelDebug,
@@ -30,7 +44,7 @@ func logMessage(level Level, message string, out, err *bytes.Buffer, time, utc b
 	}
 }
 
-func logMessagef(level Level, format, message string, out, err *bytes.Buffer, time, utc bool) {
+func logMessageFormated(level Level, format, message string, out, err *bytes.Buffer, time, utc bool) {
 	log := New(&Config{
 		Level: LevelDebug,
 		Out:   out,
@@ -63,7 +77,7 @@ func testOutput(t *testing.T, level Level, message string, formated bool) {
 	} else {
 		want = prefix + "message=" + message + "\n"
 		format := "message=%s"
-		logMessagef(level, format, message, out, err, false, false)
+		logMessageFormated(level, format, message, out, err, false, false)
 	}
 	if level == LevelDebug || level == LevelInfo || level == LevelWarn {
 		if got := out.String(); got != want {
@@ -85,14 +99,14 @@ func TestLog(t *testing.T) {
 
 func checkEmptyMessage(t *testing.T, out *bytes.Buffer, messageLevel, outputlevel Level) {
 	if out.String() == "" {
-		t.Errorf("Got empty %s message for %s output level", messageLevel.String(), outputlevel.String())
+		t.Errorf("Got empty %s message for %s output level", messageLevel, outputlevel)
 	}
 
 }
 
 func checkNonEmptyMessage(t *testing.T, out *bytes.Buffer, messageLevel, outputlevel Level) {
 	if out.String() != "" {
-		t.Errorf("Got non-empty %s message for %s output level", messageLevel.String(), outputlevel.String())
+		t.Errorf("Got non-empty %s message for %s output level", messageLevel, outputlevel)
 	}
 }
 
@@ -171,8 +185,28 @@ func testOutputWithTime(t *testing.T, level Level, message string) {
 	}
 }
 
+func testOutputFormatedWithTime(t *testing.T, level Level, message string) {
+	prefix := "[" + config.SERVICENAME + ":" + level.String() + "] "
+	want := prefix + "__TIME__ " + UTC + message + "\n"
+	out := &bytes.Buffer{}
+	err := &bytes.Buffer{}
+	logMessageFormated(level, "%s", message, out, err, true, true)
+	if level == LevelDebug || level == LevelInfo || level == LevelWarn {
+		if got := out.String(); !strings.Contains(got, UTC) ||
+			!strings.Contains(got, prefix) || !strings.Contains(got, message) {
+			t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
+		}
+	} else {
+		if got := err.String(); !strings.Contains(got, UTC) ||
+			!strings.Contains(got, prefix) || !strings.Contains(got, message) {
+			t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
+		}
+	}
+}
+
 func TestLogWithTime(t *testing.T) {
 	for _, level := range []Level{LevelDebug, LevelInfo, LevelWarn, LevelError, LevelFatal} {
 		testOutputWithTime(t, level, level.String()+" message")
+		testOutputFormatedWithTime(t, level, level.String()+" message")
 	}
 }
