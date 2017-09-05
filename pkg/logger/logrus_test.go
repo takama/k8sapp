@@ -1,12 +1,20 @@
 package logger
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/sirupsen/logrus"
+)
 
 func TestLogrusLevel(t *testing.T) {
 	for _, l := range []Level{LevelDebug, LevelInfo, LevelWarn, LevelError, LevelFatal} {
 		if logrusLevelConverter(l) == 0 {
 			t.Errorf("Got empty data for %s log level", l.String())
 		}
+	}
+	level := logrusLevelConverter(customLevel)
+	if level != logrus.InfoLevel {
+		t.Errorf("invalid log level:\ngot:  %s\nwant: %s", level, logrus.InfoLevel)
 	}
 }
 
