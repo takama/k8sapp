@@ -58,6 +58,104 @@ func New(cfg *Config) Logger {
 }
 ```
 
+## HTTP Routers
+
+Sometimes is difficult to decide which HTTP router we should use in our service. The interfaces help to adapt routers and switch it between each other without overhead.
+
+### httprouter ([Julien Schmidt](https://github.com/julienschmidt/httprouter))
+
+```go
+type HTTPRouter interface {
+    // Standard methods
+
+    GET(path string, h httprouter.Handle)
+    PUT(path string, h httprouter.Handle)
+    POST(path string, h httprouter.Handle)
+    DELETE(path string, h httprouter.Handle)
+    HEAD(path string, h httprouter.Handle)
+    OPTIONS(path string, h httprouter.Handle)
+    PATCH(path string, h httprouter.Handle)
+
+    // User defined options and handlers
+
+    // If enabled, the router automatically replies to OPTIONS requests.
+    UseOptionsReplies(bool)
+
+    // SetupNotAllowedHandler is called when a request cannot be routed.
+    SetupNotAllowedHandler(http.Handler)
+
+    // SetupNotFoundHandler allows to define own handler for undefined URL path.
+    SetupNotFoundHandler(http.Handler)
+
+    // SetupRecoveryHandler is called when panic happen.
+    SetupRecoveryHandler(func(http.ResponseWriter, *http.Request, interface{}))
+
+    // Listen and serve on requested host and port e.g "0.0.0.0:8080"
+    Listen(hostPort string) error
+}
+```
+
+### Simple router implemented in this project and 100% tested
+
+```go
+// Control interface contains methods that control
+// HTTP header, URL/post query parameters, request/response
+// and HTTP output like Code(), Write(), etc.
+type Control interface {
+    Request() *http.Request
+
+    // Query gets URL/Post query parameters by key.
+    Query(key string) string
+
+    // Param sets URL/Post key/value query parameters.
+    Param(key, value string)
+
+    // Header represents http.ResponseWriter header.
+    Header() http.Header
+
+    // Code sets HTTP status code e.g. http.StatusOk
+    Code(code int)
+
+    // Write prepared header, status code and body data into http output.
+    Write(data interface{})
+}
+
+// Router interface contains base http methods e.g. GET, PUT, POST
+// and defines your own handlers that is useful in some use cases
+type Router interface {
+    // Standard methods
+
+    GET(path string, f func(Control))
+    PUT(path string, f func(Control))
+    POST(path string, f func(Control))
+    DELETE(path string, f func(Control))
+    HEAD(path string, f func(Control))
+    OPTIONS(path string, f func(Control))
+    PATCH(path string, f func(Control))
+
+    // User defined options and handlers
+
+    // If enabled, the router automatically replies to OPTIONS requests.
+    UseOptionsReplies(bool)
+
+    // SetupNotAllowedHandler is called when a request cannot be routed.
+    SetupNotAllowedHandler(func(Control))
+
+    // SetupNotFoundHandler allows to define own handler for undefined URL path.
+    SetupNotFoundHandler(func(Control))
+
+   // SetupRecoveryHandler is called when panic happen.
+    SetupRecoveryHandler(func(Control))
+
+    // SetupMiddleware defines handler that allows to take control
+    // before it call standard methods above e.g. GET, PUT.
+    SetupMiddleware(func(func(*Control)) func(*Control))
+
+    // Listen and serve on requested host and port e.g "0.0.0.0:8080"
+    Listen(hostPort string) error
+}
+```
+
 ## System signals
 
 The application includes the ability to intercept system signals and transfer control to special methods for graceful shutdown.
