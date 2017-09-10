@@ -62,6 +62,8 @@ func New(cfg *Config) Logger {
 
 Sometimes is difficult to decide which HTTP router we should use in our service. The interfaces help to adapt routers and switch it between each other without overhead.
 
+__NOTE: this is optional, standard static router may conform better
+
 ### httprouter ([Julien Schmidt](https://github.com/julienschmidt/httprouter))
 
 ```go
