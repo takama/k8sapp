@@ -98,6 +98,24 @@ type HTTPRouter interface {
 ### Simple router implemented in this project and 100% tested
 
 ```go
+type Router interface {
+    // Standard methods
+
+    GET(path string, f func(Control))
+    PUT(path string, f func(Control))
+    POST(path string, f func(Control))
+    DELETE(path string, f func(Control))
+    HEAD(path string, f func(Control))
+    OPTIONS(path string, f func(Control))
+    PATCH(path string, f func(Control))
+
+    // The same options and handlers as in httprouter
+ }
+```
+
+Used `Control` interface that simplify access to query parameters and simplify write data into HTTP output
+
+```go
 type Control interface {
     Request() *http.Request
 
@@ -116,22 +134,6 @@ type Control interface {
     // Write prepared header, status code and body data into http output.
     Write(data interface{})
 }
-
-type Router interface {
-    // Standard methods
-
-    GET(path string, f func(Control))
-    PUT(path string, f func(Control))
-    POST(path string, f func(Control))
-    DELETE(path string, f func(Control))
-    HEAD(path string, f func(Control))
-    OPTIONS(path string, f func(Control))
-    PATCH(path string, f func(Control))
-
-    // User defined options and handlers
-
-    // The same options and handlers as in httprouter
- }
 ```
 
 ## System signals
