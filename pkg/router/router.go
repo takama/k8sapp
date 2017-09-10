@@ -76,7 +76,7 @@ type Router interface {
 
 	// SetupMiddleware defines handler that is allowed to take control
 	// before it is called standard methods above e.g. GET, PUT.
-	SetupMiddleware(func(func(*Control)) func(*Control))
+	SetupMiddleware(func(func(Control)) func(Control))
 
 	// Listen and serve on requested host and port e.g "0.0.0.0:8080"
 	Listen(hostPort string) error
