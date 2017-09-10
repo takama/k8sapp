@@ -58,6 +58,86 @@ func New(cfg *Config) Logger {
 }
 ```
 
+## HTTP Routers
+
+Sometimes is difficult to decide which HTTP router we should use in our service. The interfaces help to adapt routers and switch it between each other without overhead.
+
+__NOTE: this is optional, standard static router may conform better
+
+### httprouter ([Julien Schmidt](https://github.com/julienschmidt/httprouter))
+
+```go
+type HTTPRouter interface {
+    // Standard methods
+
+    GET(path string, h httprouter.Handle)
+    PUT(path string, h httprouter.Handle)
+    POST(path string, h httprouter.Handle)
+    DELETE(path string, h httprouter.Handle)
+    HEAD(path string, h httprouter.Handle)
+    OPTIONS(path string, h httprouter.Handle)
+    PATCH(path string, h httprouter.Handle)
+
+    // User defined options and handlers
+
+    // If enabled, the router automatically replies to OPTIONS requests.
+    UseOptionsReplies(bool)
+
+    // SetupNotAllowedHandler is called when a request cannot be routed.
+    SetupNotAllowedHandler(http.Handler)
+
+    // SetupNotFoundHandler allows to define own handler for undefined URL path.
+    SetupNotFoundHandler(http.Handler)
+
+    // SetupRecoveryHandler is called when panic happen.
+    SetupRecoveryHandler(func(http.ResponseWriter, *http.Request, interface{}))
+
+    // Listen and serve on requested host and port e.g "0.0.0.0:8080"
+    Listen(hostPort string) error
+}
+```
+
+### Simple router implemented in this project and 100% tested
+
+```go
+type Router interface {
+    // Standard methods
+
+    GET(path string, f func(Control))
+    PUT(path string, f func(Control))
+    POST(path string, f func(Control))
+    DELETE(path string, f func(Control))
+    HEAD(path string, f func(Control))
+    OPTIONS(path string, f func(Control))
+    PATCH(path string, f func(Control))
+
+    // The same options and handlers as in httprouter
+ }
+```
+
+Used `Control` interface that simplify access to query parameters and simplify write data into HTTP output
+
+```go
+type Control interface {
+    Request() *http.Request
+
+    // Query gets URL/Post query parameters by key.
+    Query(key string) string
+
+    // Param sets URL/Post key/value query parameters.
+    Param(key, value string)
+
+    // Header represents http.ResponseWriter header.
+    Header() http.Header
+
+    // Code sets HTTP status code e.g. http.StatusOk
+    Code(code int)
+
+    // Write prepared header, status code and body data into http output.
+    Write(data interface{})
+}
+```
+
 ## System signals
 
 The application includes the ability to intercept system signals and transfer control to special methods for graceful shutdown.
