@@ -74,8 +74,8 @@ type Router interface {
 	// http status code http.StatusInternalServerError (500)
 	SetupRecoveryHandler(func(Control))
 
-	// SetupMiddleware defines handler that allows to take control
-	// before it call standard methods above e.g. GET, PUT.
+	// SetupMiddleware defines handler that is allowed to take control
+	// before it is called standard methods above e.g. GET, PUT.
 	SetupMiddleware(func(func(*Control)) func(*Control))
 
 	// Listen and serve on requested host and port e.g "0.0.0.0:8080"
@@ -84,6 +84,5 @@ type Router interface {
 
 // New returns new router that implement Router interface.
 func New() Router {
-	// return newRouter()
-	return nil
+	return newRouter()
 }
