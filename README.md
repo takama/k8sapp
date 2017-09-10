@@ -98,9 +98,6 @@ type HTTPRouter interface {
 ### Simple router implemented in this project and 100% tested
 
 ```go
-// Control interface contains methods that control
-// HTTP header, URL/post query parameters, request/response
-// and HTTP output like Code(), Write(), etc.
 type Control interface {
     Request() *http.Request
 
@@ -120,8 +117,6 @@ type Control interface {
     Write(data interface{})
 }
 
-// Router interface contains base http methods e.g. GET, PUT, POST
-// and defines your own handlers that is useful in some use cases
 type Router interface {
     // Standard methods
 
@@ -135,25 +130,8 @@ type Router interface {
 
     // User defined options and handlers
 
-    // If enabled, the router automatically replies to OPTIONS requests.
-    UseOptionsReplies(bool)
-
-    // SetupNotAllowedHandler is called when a request cannot be routed.
-    SetupNotAllowedHandler(func(Control))
-
-    // SetupNotFoundHandler allows to define own handler for undefined URL path.
-    SetupNotFoundHandler(func(Control))
-
-   // SetupRecoveryHandler is called when panic happen.
-    SetupRecoveryHandler(func(Control))
-
-    // SetupMiddleware defines handler that allows to take control
-    // before it call standard methods above e.g. GET, PUT.
-    SetupMiddleware(func(func(*Control)) func(*Control))
-
-    // Listen and serve on requested host and port e.g "0.0.0.0:8080"
-    Listen(hostPort string) error
-}
+    // The same options and handlers as in httprouter
+ }
 ```
 
 ## System signals
