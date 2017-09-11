@@ -34,7 +34,7 @@ type HTTPRouter interface {
 
 	// If enabled, the router automatically replies to OPTIONS requests.
 	// Nevertheless OPTIONS handlers take priority over automatic replies.
-	// By default this option is disabled
+	// By default this option is enabled
 	UseOptionsReplies(bool)
 
 	// SetupNotAllowedHandler defines own handler which is called when a request
@@ -57,6 +57,5 @@ type HTTPRouter interface {
 
 // NewHTTPRouter returns new router that implement HTTPRouter interface.
 func NewHTTPRouter() HTTPRouter {
-	// return newHTTPRouter()
-	return nil
+	return newHTTPRouter()
 }
