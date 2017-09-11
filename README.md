@@ -51,10 +51,15 @@ type Logger interface {
 Just make your choice
 
 ```go
-func New(cfg *Config) Logger {
-    // return newLogrus(cfg)
-    // return newXLog(cfg)
-    return newStdLog(cfg)
+func Run() (err error) {
+    // log := xlog.New()
+    // log := logrus.New()
+    log := stdlog.New(&logger.Config{
+        Level: logger.LevelDebug,
+        Time:  true,
+        UTC:   true,
+    })
+    ...
 }
 ```
 
