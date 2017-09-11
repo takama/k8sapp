@@ -6,13 +6,14 @@ package service
 
 import (
 	"github.com/takama/k8sapp/pkg/logger"
+	stdlog "github.com/takama/k8sapp/pkg/logger/standard"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
 // Run starts the service
 func Run() (err error) {
 	// Setup logger
-	log := logger.New(&logger.Config{
+	log := stdlog.New(&logger.Config{
 		Level: logger.LevelDebug,
 		Time:  true,
 		UTC:   true,

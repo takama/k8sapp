@@ -1,4 +1,4 @@
-package router
+package bitroute
 
 import (
 	"encoding/json"
@@ -7,10 +7,12 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/takama/k8sapp/pkg/router"
 )
 
-func getRouterForTesting() *router {
-	return &router{
+func getRouterForTesting() *bitroute {
+	return &bitroute{
 		handlers: make(map[string]*parser),
 	}
 }
@@ -29,7 +31,7 @@ func TestNewRouter(t *testing.T) {
 func TestRouterGetRootStatic(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler for root static path
-	r.GET("/", func(c Control) {
+	r.GET("/", func(c router.Control) {
 		c.Write("Root")
 	})
 	req, err := http.NewRequest("GET", "/", nil)
@@ -46,7 +48,7 @@ func TestRouterGetRootStatic(t *testing.T) {
 func TestRouterGetStatic(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler for static path
-	r.GET("/hello", func(c Control) {
+	r.GET("/hello", func(c router.Control) {
 		c.Write("Hello")
 	})
 	req, err := http.NewRequest("GET", "/hello", nil)
@@ -63,7 +65,7 @@ func TestRouterGetStatic(t *testing.T) {
 func TestRouterGetParameter(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler with parameter
-	r.GET("/hello/:name", func(c Control) {
+	r.GET("/hello/:name", func(c router.Control) {
 		c.Write("Hello " + c.Query(":name"))
 	})
 	req, err := http.NewRequest("GET", "/hello/John", nil)
@@ -80,7 +82,7 @@ func TestRouterGetParameter(t *testing.T) {
 func TestRouterGetParameterFromClassicUrl(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler with two parameters
-	r.GET("/users/:name", func(c Control) {
+	r.GET("/users/:name", func(c router.Control) {
 		c.Write("Users: " + c.Query(":name") + " " + c.Query("name"))
 	})
 	req, err := http.NewRequest("GET", "/users/Jane/?name=Joe", nil)
@@ -97,7 +99,7 @@ func TestRouterGetParameterFromClassicUrl(t *testing.T) {
 func TestRouterPostJSONData(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers POST handler
-	r.POST("/users", func(c Control) {
+	r.POST("/users", func(c router.Control) {
 		body, err := ioutil.ReadAll(c.Request().Body)
 		if err != nil {
 			t.Error(err)
@@ -122,7 +124,7 @@ func TestRouterPostJSONData(t *testing.T) {
 func TestRouterPutJSONData(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers PUT handler
-	r.PUT("/users", func(c Control) {
+	r.PUT("/users", func(c router.Control) {
 		body, err := ioutil.ReadAll(c.Request().Body)
 		if err != nil {
 			t.Error(err)
@@ -147,7 +149,7 @@ func TestRouterPutJSONData(t *testing.T) {
 func TestRouterDelete(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers DELETE handler
-	r.DELETE("/users", func(c Control) {
+	r.DELETE("/users", func(c router.Control) {
 		c.Write("Users deleted")
 	})
 	req, err := http.NewRequest("DELETE", "/users/", nil)
@@ -164,7 +166,7 @@ func TestRouterDelete(t *testing.T) {
 func TestRouterHead(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers HEAD handler
-	r.HEAD("/command", func(c Control) {
+	r.HEAD("/command", func(c router.Control) {
 		c.Header().Add("test", "value")
 	})
 	req, err := http.NewRequest("HEAD", "/command/", nil)
@@ -182,7 +184,7 @@ func TestRouterHead(t *testing.T) {
 func TestRouterOptions(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers OPTIONS handler
-	r.OPTIONS("/option", func(c Control) {
+	r.OPTIONS("/option", func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
 	req, err := http.NewRequest("OPTIONS", "/option/", nil)
@@ -200,7 +202,7 @@ func TestRouterOptions(t *testing.T) {
 func TestRouterPatch(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers PATCH handler
-	r.PATCH("/patch", func(c Control) {
+	r.PATCH("/patch", func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
 	req, err := http.NewRequest("PATCH", "/patch/", nil)
@@ -218,7 +220,7 @@ func TestRouterPatch(t *testing.T) {
 func TestRouterUseOptionsReplies(t *testing.T) {
 	r := getRouterForTesting()
 	path := "/options"
-	r.GET(path, func(c Control) {
+	r.GET(path, func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
 	r.UseOptionsReplies(true)
@@ -242,7 +244,7 @@ func TestRouterUseOptionsReplies(t *testing.T) {
 func TestRouterNotFound(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler
-	r.GET("/found", func(c Control) {
+	r.GET("/found", func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
 	req, err := http.NewRequest("GET", "/not-found/", nil)
@@ -261,11 +263,11 @@ func TestRouterAllowedMethods(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler
 	path := "/allowed"
-	r.GET(path, func(c Control) {
+	r.GET(path, func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
 	// Registers PUT handler
-	r.PUT(path, func(c Control) {
+	r.PUT(path, func(c router.Control) {
 		c.Code(http.StatusAccepted)
 	})
 	result := r.allowedMethods(path)
@@ -298,11 +300,11 @@ func TestRouterNotAllowed(t *testing.T) {
 	// Registers GET handler
 	path := "/allowed"
 	message := http.StatusText(http.StatusMethodNotAllowed) + "\n"
-	r.GET(path, func(c Control) {
+	r.GET(path, func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
 	// Registers PUT handler
-	r.PUT(path, func(c Control) {
+	r.PUT(path, func(c router.Control) {
 		c.Code(http.StatusAccepted)
 	})
 	req, err := http.NewRequest("POST", path, nil)
@@ -330,10 +332,10 @@ func TestRouterSetupNotAllowedHandler(t *testing.T) {
 	r := getRouterForTesting()
 	message := http.StatusText(http.StatusForbidden)
 	path := "/not/allowed"
-	r.GET(path, func(c Control) {
+	r.GET(path, func(c router.Control) {
 		c.Code(http.StatusOK)
 	})
-	r.SetupNotAllowedHandler(func(c Control) {
+	r.SetupNotAllowedHandler(func(c router.Control) {
 		c.Code(http.StatusForbidden)
 		c.Write(message)
 	})
@@ -360,7 +362,7 @@ func TestRouterSetupNotAllowedHandler(t *testing.T) {
 func TestRouterSetupNotFound(t *testing.T) {
 	r := getRouterForTesting()
 	message := http.StatusText(http.StatusForbidden)
-	r.SetupNotFoundHandler(func(c Control) {
+	r.SetupNotFoundHandler(func(c router.Control) {
 		c.Code(http.StatusForbidden)
 		c.Write(message)
 	})
@@ -383,10 +385,10 @@ func TestRouterRecoveryHandler(t *testing.T) {
 	r := getRouterForTesting()
 	message := http.StatusText(http.StatusServiceUnavailable)
 	path := "/recovery"
-	r.GET(path, func(c Control) {
+	r.GET(path, func(c router.Control) {
 		panic("test")
 	})
-	r.SetupRecoveryHandler(func(c Control) {
+	r.SetupRecoveryHandler(func(c router.Control) {
 		c.Code(http.StatusServiceUnavailable)
 		c.Write(message)
 	})
@@ -409,12 +411,12 @@ func TestRouterMiddleware(t *testing.T) {
 	r := getRouterForTesting()
 	message := http.StatusText(http.StatusOK)
 	path := "/middleware"
-	r.GET(path, func(c Control) {
+	r.GET(path, func(c router.Control) {
 		c.Code(http.StatusOK)
 		c.Write(message)
 	})
-	r.SetupMiddleware(func(f func(Control)) func(Control) {
-		return func(c Control) {
+	r.SetupMiddleware(func(f func(router.Control)) func(router.Control) {
+		return func(c router.Control) {
 			headers := c.Request().Header.Get("Access-Control-Request-Headers")
 			if headers != "" {
 				c.Header().Set("Access-Control-Allow-Headers", "content-type")

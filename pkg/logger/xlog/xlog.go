@@ -8,10 +8,11 @@ import (
 	"os"
 
 	"github.com/rs/xlog"
+	"github.com/takama/k8sapp/pkg/logger"
 )
 
 // newXLog creates "github.com/rs/xlog" logger
-func newXLog(config *Config) Logger {
+func newXLog(config *logger.Config) logger.Logger {
 	var out xlog.Output
 	switch config.Err {
 	// We should find more matches between types of output

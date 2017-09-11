@@ -54,8 +54,3 @@ type HTTPRouter interface {
 	// Listen and serve on requested host and port e.g "0.0.0.0:8080"
 	Listen(hostPort string) error
 }
-
-// NewHTTPRouter returns new router that implement HTTPRouter interface.
-func NewHTTPRouter() HTTPRouter {
-	return newHTTPRouter()
-}

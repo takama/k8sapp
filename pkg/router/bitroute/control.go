@@ -2,13 +2,15 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package router
+package bitroute
 
 import (
 	"compress/gzip"
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/takama/k8sapp/pkg/router"
 )
 
 type control struct {
@@ -22,7 +24,7 @@ type control struct {
 }
 
 // newControl returns new control that implement Control interface.
-func newControl(w http.ResponseWriter, req *http.Request) Control {
+func newControl(w http.ResponseWriter, req *http.Request) router.Control {
 	return &control{
 		req: req,
 		w:   w,
