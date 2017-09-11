@@ -1,10 +1,12 @@
-package router
+package bitroute
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/takama/k8sapp/pkg/router"
 )
 
 type registered struct {
@@ -22,55 +24,55 @@ type expected struct {
 var setOfRegistered = []registered{
 	{
 		"/hello/John",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write("Hello from static path")
 		},
 	},
 	{
 		"/hello/:name",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write("Hello " + c.Query(":name"))
 		},
 	},
 	{
 		"/:h/:n",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write(c.Query(":n") + " from " + c.Query(":h"))
 		},
 	},
 	{
 		"/products/book/orders/:id",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write("Product: book order# " + c.Query(":id"))
 		},
 	},
 	{
 		"/products/:name/orders/:id",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write("Product: " + c.Query(":name") + " order# " + c.Query(":id"))
 		},
 	},
 	{
 		"/products/:name/:order/:id",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write("Product: " + c.Query(":name") + " # " + c.Query(":id"))
 		},
 	},
 	{
 		"/:product/:name/:order/:id",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write(c.Query(":product") + " " + c.Query(":name") + " " + c.Query(":order") + " # " + c.Query(":id"))
 		},
 	},
 	{
 		"/static/*",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write("Hello from star static path")
 		},
 	},
 	{
 		"/files/:dir/*",
-		func(c Control) {
+		func(c router.Control) {
 			c.Write(c.Query(":dir"))
 		},
 	},
@@ -246,7 +248,7 @@ func TestParserSplit(t *testing.T) {
 		if !ok {
 			if strings.HasPrefix(p, "/A/A/A") {
 				parser := newParser()
-				result := parser.register(p, func(Control) {})
+				result := parser.register(p, func(router.Control) {})
 				if result {
 					t.Error("Expected false result, got", result)
 				}
@@ -279,7 +281,7 @@ func TestGetRoutes(t *testing.T) {
 func TestRegisterAsterisk(t *testing.T) {
 	data := "Any path is ok"
 	p := newParser()
-	p.register("*", func(c Control) {
+	p.register("*", func(c router.Control) {
 		c.Write(data)
 	})
 	path := "/any/path/is/ok"

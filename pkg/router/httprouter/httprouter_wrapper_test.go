@@ -5,6 +5,12 @@ import (
 	"testing"
 )
 
+func TestNewHTTPRouter(t *testing.T) {
+	r := New()
+	if r == nil {
+		t.Error("Expected new httprouter, got nil")
+	}
+}
 func TestHTTPRouter(t *testing.T) {
 	r := new(httpRouter)
 	if r.HandleOPTIONS {

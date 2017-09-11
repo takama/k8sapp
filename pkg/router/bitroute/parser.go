@@ -2,16 +2,20 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package router
+package bitroute
 
-import "sort"
+import (
+	"sort"
+
+	"github.com/takama/k8sapp/pkg/router"
+)
 
 const (
 	maxLevel = 255
 	asterisk = "*"
 )
 
-type handle func(Control)
+type handle func(router.Control)
 
 type parser struct {
 	fields   map[uint8]records

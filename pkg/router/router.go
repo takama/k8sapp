@@ -81,8 +81,3 @@ type Router interface {
 	// Listen and serve on requested host and port e.g "0.0.0.0:8080"
 	Listen(hostPort string) error
 }
-
-// New returns new router that implement Router interface.
-func New() Router {
-	return newRouter()
-}

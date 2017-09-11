@@ -8,13 +8,15 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/takama/k8sapp/pkg/router"
 )
 
 type httpRouter struct {
 	httprouter.Router
 }
 
-func newHTTPRouter() HTTPRouter {
+// New returns new router that implement HTTPRouter interface.
+func New() router.HTTPRouter {
 	router := new(httpRouter)
 	router.RedirectTrailingSlash = true
 	router.RedirectFixedPath = true
