@@ -4,8 +4,7 @@
 [[projects]]
   name = "github.com/julienschmidt/httprouter"
   packages = ["."]
-  revision = "8c199fb6259ffc1af525cc3ad52ee60ba8359669"
-  version = "v1.1"
+  revision = "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e"
 
 [[projects]]
   name = "github.com/rs/xhandler"
@@ -51,6 +50,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dec5b4cb82bdba8f4253fabf6009a2c1bcf7019885cb4d9d4313e52159e9f438"
+  inputs-digest = "a41c1345454f5367c4e2093edc21806959d82289f713569ab6977132baa9955a"
   solver-name = "gps-cdcl"
   solver-version = 1
