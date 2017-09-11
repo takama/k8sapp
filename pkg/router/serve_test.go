@@ -20,6 +20,10 @@ func TestNewRouter(t *testing.T) {
 	if r == nil {
 		t.Error("Expected new router, got nil")
 	}
+	err := r.Listen("$")
+	if err == nil {
+		t.Error("Expected error if used incorrect host and port")
+	}
 }
 
 func TestRouterGetRootStatic(t *testing.T) {

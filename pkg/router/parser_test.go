@@ -301,3 +301,29 @@ func TestRegisterAsterisk(t *testing.T) {
 		t.Error("Expected", data, "got", trw.Body.String())
 	}
 }
+
+func TestSortRecords(t *testing.T) {
+	var r = records{
+		{
+			key: 111,
+		},
+		{
+			key: 222,
+		},
+	}
+	if r.Len() != len(r) {
+		t.Error("Len doesn't work, expected", len(r), "got", r.Len())
+	}
+	first := r[0].key
+	second := r[1].key
+	r.Swap(0, 1)
+	if r[0].key != second {
+		t.Error("Swap doesn't work, expected", second, "got", r[0].key)
+	}
+	if r[1].key != first {
+		t.Error("Swap doesn't work, expected", first, "got", r[1].key)
+	}
+	if r.Less(0, 1) {
+		t.Error("Less doesn't work, expected", r[1].key, "less then", r[0].key)
+	}
+}
