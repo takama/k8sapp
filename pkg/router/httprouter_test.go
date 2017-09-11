@@ -4,7 +4,7 @@ import "testing"
 
 func TestNewHTTPRouter(t *testing.T) {
 	r := NewHTTPRouter()
-	if r != nil {
-		t.Error("Expected nil, got", r)
+	if r == nil {
+		t.Error("Expected new httprouter, got nil")
 	}
 }

@@ -31,4 +31,4 @@
 
 [[constraint]]
   name = "github.com/julienschmidt/httprouter"
-  version = "1.1"
+  revision = "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e"
