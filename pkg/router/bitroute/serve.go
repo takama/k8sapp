@@ -35,7 +35,7 @@ type bitroute struct {
 }
 
 // New returns new router that implement Router interface.
-func New() router.Router {
+func New() router.BitRoute {
 	return &bitroute{
 		handlers: make(map[string]*parser),
 	}

@@ -34,9 +34,9 @@ type Control interface {
 	// TODO Add more control methods.
 }
 
-// Router interface contains base http methods e.g. GET, PUT, POST
+// BitRoute interface contains base http methods e.g. GET, PUT, POST
 // and defines your own handlers that is useful in some use cases
-type Router interface {
+type BitRoute interface {
 	// Standard methods
 
 	// GET registers a new request handle for HTTP GET method.
