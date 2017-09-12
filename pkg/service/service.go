@@ -5,22 +5,31 @@
 package service
 
 import (
+	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/logger"
 	stdlog "github.com/takama/k8sapp/pkg/logger/standard"
+	"github.com/takama/k8sapp/pkg/router"
+	"github.com/takama/k8sapp/pkg/router/bitroute"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
-// Run starts the service
-func Run() (err error) {
+// Setup configures the service
+func Setup(cfg *config.Config) (r router.BitRoute, err error) {
 	// Setup logger
 	log := stdlog.New(&logger.Config{
-		Level: logger.LevelDebug,
+		Level: cfg.LogLevel,
 		Time:  true,
 		UTC:   true,
 	})
 
 	log.Info("Version:", version.RELEASE)
 	log.Warnf("%s log level is used", logger.LevelDebug.String())
+	log.Infof("Service %s listened on %s:%d", config.SERVICENAME, cfg.LocalHost, cfg.LocalPort)
+
+	// Register new router
+	r = bitroute.New()
+
+	// TODO: configure router
 
 	return
 }
