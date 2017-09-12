@@ -5,14 +5,19 @@
 APP=k8sapp
 PROJECT=github.com/takama/k8sapp
 REGISTRY?=docker.io/takama
-CONTAINER_IMAGE?=${REGISTRY}/${APP}
-CONTAINER_NAME?=${APP}
 CA_DIR?=certs
 
 # Use the 0.0.0 tag for testing, it shouldn't clobber any release builds
 RELEASE?=0.2.2
 GOOS?=linux
 GOARCH?=amd64
+
+K8SAPP_LOCAL_HOST?=0.0.0.0
+K8SAPP_LOCAL_PORT?=8080
+K8SAPP_LOG_LEVEL?=0
+
+CONTAINER_IMAGE?=${REGISTRY}/${APP}
+CONTAINER_NAME?=${APP}
 
 REPO_INFO=$(shell git config --get remote.origin.url)
 
@@ -55,7 +60,10 @@ push: build
 .PHONY: run
 run: build
 	@echo "+ $@"
-	@docker run --name ${CONTAINER_NAME} \
+	@docker run --name ${CONTAINER_NAME} -p ${K8SAPP_LOCAL_PORT}:${K8SAPP_LOCAL_PORT} \
+		-e "K8SAPP_LOCAL_HOST=${K8SAPP_LOCAL_HOST}" \
+		-e "K8SAPP_LOCAL_PORT=${K8SAPP_LOCAL_PORT}" \
+		-e "K8SAPP_LOG_LEVEL=${K8SAPP_LOG_LEVEL}" \
 		-d $(CONTAINER_IMAGE):$(RELEASE)
 	@sleep 1
 	@docker logs ${CONTAINER_NAME}
