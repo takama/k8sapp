@@ -28,3 +28,11 @@
 [[constraint]]
   name = "github.com/sirupsen/logrus"
   version = "1.0.3"
+
+[[constraint]]
+  name = "github.com/julienschmidt/httprouter"
+  revision = "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e"
+
+[[constraint]]
+  name = "github.com/kelseyhightower/envconfig"
+  revision = "70f0258d44cbaa3b6a2581d82f58da01a38e4de4"

@@ -3,17 +3,19 @@ package logger
 import (
 	"os"
 	"testing"
+
+	"github.com/takama/k8sapp/pkg/logger"
 )
 
 func TestNewXLog(t *testing.T) {
-	log1 := newXLog(&Config{
-		Level: LevelDebug,
+	log1 := newXLog(&logger.Config{
+		Level: logger.LevelDebug,
 	})
 	if log1 == nil {
 		t.Error("Got uninitialized XLog logger")
 	}
-	log2 := newXLog(&Config{
-		Level: LevelInfo,
+	log2 := newXLog(&logger.Config{
+		Level: logger.LevelInfo,
 		Out:   os.Stdout,
 		Err:   os.Stdout,
 	})

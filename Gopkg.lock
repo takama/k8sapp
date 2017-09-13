@@ -2,6 +2,16 @@
 
 
 [[projects]]
+  name = "github.com/julienschmidt/httprouter"
+  packages = ["."]
+  revision = "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e"
+
+[[projects]]
+  name = "github.com/kelseyhightower/envconfig"
+  packages = ["."]
+  revision = "70f0258d44cbaa3b6a2581d82f58da01a38e4de4"
+
+[[projects]]
   name = "github.com/rs/xhandler"
   packages = ["."]
   revision = "d9d9599b6aaf6a058cb7b1f48291ded2cbd13390"
@@ -45,6 +55,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "73486fb5324297d10241203b4e59c82f13ebffb4e47b02e14b5da8182ac86eb4"
+  inputs-digest = "e59ccb0cbb49d6ee79d6526fbc5be075343a1f24c46c3aa2c74d1e6c89f09ece"
   solver-name = "gps-cdcl"
   solver-version = 1

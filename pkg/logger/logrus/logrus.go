@@ -2,29 +2,32 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package logger
+package logrus
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/sirupsen/logrus"
+	"github.com/takama/k8sapp/pkg/logger"
+)
 
-// newLogrus creates "github.com/sirupsen/logrus" logger
-func newLogrus(config *Config) Logger {
+// New creates "github.com/sirupsen/logrus" logger
+func New(config *logger.Config) logger.Logger {
 	logger := logrus.New()
 	logger.Level = logrusLevelConverter(config.Level)
 	logger.WithFields(logrus.Fields(config.Fields))
 	return logger
 }
 
-func logrusLevelConverter(level Level) logrus.Level {
+func logrusLevelConverter(level logger.Level) logrus.Level {
 	switch level {
-	case LevelDebug:
+	case logger.LevelDebug:
 		return logrus.DebugLevel
-	case LevelInfo:
+	case logger.LevelInfo:
 		return logrus.InfoLevel
-	case LevelWarn:
+	case logger.LevelWarn:
 		return logrus.WarnLevel
-	case LevelError:
+	case logger.LevelError:
 		return logrus.ErrorLevel
-	case LevelFatal:
+	case logger.LevelFatal:
 		return logrus.FatalLevel
 	default:
 		return logrus.InfoLevel
