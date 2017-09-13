@@ -23,8 +23,8 @@ type control struct {
 	}
 }
 
-// newControl returns new control that implement Control interface.
-func newControl(w http.ResponseWriter, req *http.Request) router.Control {
+// NewControl returns new control that implement Control interface.
+func NewControl(w http.ResponseWriter, req *http.Request) router.Control {
 	return &control{
 		req: req,
 		w:   w,

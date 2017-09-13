@@ -6,6 +6,7 @@ package service
 
 import (
 	"github.com/takama/k8sapp/pkg/config"
+	"github.com/takama/k8sapp/pkg/handlers"
 	"github.com/takama/k8sapp/pkg/logger"
 	stdlog "github.com/takama/k8sapp/pkg/logger/standard"
 	"github.com/takama/k8sapp/pkg/router"
@@ -26,10 +27,17 @@ func Setup(cfg *config.Config) (r router.BitRoute, err error) {
 	log.Warnf("%s log level is used", logger.LevelDebug.String())
 	log.Infof("Service %s listened on %s:%d", config.SERVICENAME, cfg.LocalHost, cfg.LocalPort)
 
+	// Define handlers
+	h := handlers.New(log, cfg)
+
 	// Register new router
 	r = bitroute.New()
 
-	// TODO: configure router
+	// Configure router
+	r.SetupMiddleware(h.Base)
+	r.GET("/", h.Root)
+	r.GET("/healthz", h.Health)
+	r.GET("/readyz", h.Ready)
 
 	return
 }

@@ -123,7 +123,7 @@ func (r *bitroute) register(method, path string, f func(router.Control)) {
 
 func (r *bitroute) recovery(w http.ResponseWriter, req *http.Request) {
 	if recv := recover(); recv != nil {
-		c := newControl(w, req)
+		c := NewControl(w, req)
 		r.recoveryHandler(c)
 	}
 }
@@ -147,7 +147,7 @@ func (r *bitroute) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 	if _, ok := r.handlers[req.Method]; ok {
 		if handle, params, ok := r.handlers[req.Method].get(req.URL.Path); ok {
-			c := newControl(w, req)
+			c := NewControl(w, req)
 			if len(params) > 0 {
 				for _, item := range params {
 					c.Param(item.key, item.value)
@@ -165,7 +165,7 @@ func (r *bitroute) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	if len(allowed) == 0 {
 		if r.notFound != nil {
-			c := newControl(w, req)
+			c := NewControl(w, req)
 			r.notFound(c)
 		} else {
 			http.NotFound(w, req)
@@ -178,7 +178,7 @@ func (r *bitroute) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if r.notAllowed != nil {
-		c := newControl(w, req)
+		c := NewControl(w, req)
 		r.notAllowed(c)
 	} else {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)

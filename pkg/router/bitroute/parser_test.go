@@ -191,7 +191,7 @@ func TestParserRegisterGet(t *testing.T) {
 		if err != nil {
 			t.Error("Error creating new request")
 		}
-		c := newControl(trw, req)
+		c := NewControl(trw, req)
 		for _, item := range params {
 			c.Param(item.key, item.value)
 		}
@@ -294,7 +294,7 @@ func TestRegisterAsterisk(t *testing.T) {
 	if err != nil {
 		t.Error("Error creating new request")
 	}
-	c := newControl(trw, req)
+	c := NewControl(trw, req)
 	for _, item := range params {
 		c.Param(item.key, item.value)
 	}
