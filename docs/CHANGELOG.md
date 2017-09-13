@@ -1,6 +1,22 @@
-# Version 0.2.2
+# Version 0.3.0
 
 [Documentation](README.md)
+
+## Changelog since 0.2.2
+
+### Documentation
+
+- Added usage description of the loggers: [xlog](https://github.com/rs/xlog), [logrus](https://github.com/sirupsen/logrus)
+
+### Codebase
+
+- Added routers interface ([#22](https://github.com/takama/k8sapp/pull/22), [@takama](https://github.com/takama))
+- Implemented Bit-Route interface  ([#23](https://github.com/takama/k8sapp/pull/23), [@takama](https://github.com/takama))
+- Implemented httprouter interface ([#24](https://github.com/takama/k8sapp/pull/24), [@takama](https://github.com/takama))
+- Added environment configuration ([#26](https://github.com/takama/k8sapp/pull/26), [@takama](https://github.com/takama))
+- Refactoring of the packages relations ([#25](https://github.com/takama/k8sapp/pull/25), [@takama](https://github.com/takama))
+- Added health/ready handlers ([#27](https://github.com/takama/k8sapp/pull/27), [@takama](https://github.com/takama))
+
 
 ## Changelog since 0.2.1
 
