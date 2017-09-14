@@ -1,6 +1,13 @@
-# Version 0.3.0
+# Version 0.3.1
 
 [Documentation](README.md)
+
+## Changelog since 0.3.0
+
+### Configuration
+
+- Added Helm charts ([#29](https://github.com/takama/k8sapp/pull/29), [@takama](https://github.com/takama))
+- Added deployment functionality in commands of Makefile  ([#29](https://github.com/takama/k8sapp/pull/29), [@takama](https://github.com/takama))
 
 ## Changelog since 0.2.2
 

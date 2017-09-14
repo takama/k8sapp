@@ -36,7 +36,7 @@ image:
   ##
   registry: docker.io/takama
   name: k8sapp
-  tag: 0.3.0
+  tag: 0.3.1
 
   ## Docker Registry/Hub auth secret name, always use `registry-pull-secret` if registry inside if k8s
   ##
