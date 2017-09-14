@@ -1,0 +1,124 @@
+## Default values for k8sapp.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
+
+## Count of instances
+##
+replicaCount: 3
+
+## Count of revisions saved in release history
+##
+revisionHistoryLimit: 5
+
+## Time of accepting requests to the service ( seconds )
+##
+minReadySeconds: 10
+
+## Value which provide max unavailable state ( percents )
+##
+maxUnavailable: 25%
+
+## Max count of surge replicas
+##
+maxSurge: 1
+
+## Termination grace period
+## It's value of period in seconds between SIGTERM and SIGKILL signals
+##
+gracePeriod: 30
+
+## Base namespace for working services
+##
+workflow: prod
+
+image:
+  ## Docker Registry/Hub image name and tag
+  ##
+  registry: docker.io/takama
+  name: k8sapp
+  tag: 0.3.0
+
+  ## Docker Registry/Hub auth secret name, always use `registry-pull-secret` if registry inside if k8s
+  ##
+  # pullSecretName: registry-pull-secret
+
+  ## Docker Registry/Hub image pull policy
+  ##
+  pullPolicy: IfNotPresent
+
+ingress:
+  ## If true, Ingress will be created
+  ##
+  enabled: true
+
+  ## Prefix for API (Example: /api/v1/)
+  ##
+  prefix: /
+
+  ## Ingress annotations (e.g. `Let's encrypt` annotations to generating certs)
+  ##
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+
+  ## Ingress host feature allow access to service through host 
+  ## example: https://hostname
+  ## Must be provided if Ingress is enabled
+  ##
+  hostBased:
+    hosts:
+    - k8sapp.my.domain
+
+    ## Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+    tls:
+    - secretName: k8sapp-secret
+      hosts:
+      - k8sapp.my.domain
+
+  ## Ingress path feature allow access to service through path 
+  ## example: https://hostname/namespace/servicename
+  ## Must be provided if Ingress is enabled
+  ##
+  pathBased:
+    hosts:
+    - services.my.domain
+
+    ## Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ## except of case when annotatoon `kubernetes.io/tls-acme: 'true'` is present
+    ##
+    tls:
+    - secretName: services-secret
+      hosts:
+      - services.my.domain
+
+service:
+  ## App container name
+  ##
+  name: k8sapp
+  
+  ## Service Type
+  ## For minikube, set this to NodePort, elsewhere use ClusterIP
+  ##
+  type: ClusterIP
+
+  ## App service port
+  ##
+  externalPort: 80
+
+  ## Pod exposed port
+  ##
+  internalPort: 8080
+
+## Resource requests and limits
+## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  limits:
+    cpu: 30m
+    memory: 48Mi
+  requests:
+    cpu: 30m
+    memory: 48Mi
