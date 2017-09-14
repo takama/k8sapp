@@ -1,0 +1,57 @@
+{{- if .Values.ingress.enabled -}}
+{{- $usePath := .Values.ingress.usePath -}}
+{{- $namespace := .Release.Namespace -}}
+{{- $workflow := .Values.workflow -}}
+{{- $serviceName := .Values.service.name -}}
+{{- $servicePort := .Values.service.externalPort -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.prefix }}
+  {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    component: "{{ .Values.service.name }}"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+  name: {{ template "name" . }}
+spec:
+  rules:
+  {{- if eq $namespace $workflow }}
+  {{- range .Values.ingress.hostBased.hosts }}
+  - host: {{ . }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $serviceName }}
+          servicePort: {{ $servicePort }}
+  {{- end -}}
+  {{- end }}
+  {{- range .Values.ingress.pathBased.hosts }}
+  - host: {{ . }}
+    http:
+      paths:
+      {{- if eq $namespace $workflow }}
+      - path: /{{ $serviceName }}
+      {{- else }}
+      - path: /{{ $namespace }}/{{ $serviceName }}
+      {{- end }}
+        backend:
+          serviceName: {{ $serviceName }}
+          servicePort: {{ $servicePort }}
+  {{- end }}
+  tls:
+  {{- if eq $namespace $workflow }}
+  {{- if .Values.ingress.hostBased.tls }}
+{{ toYaml .Values.ingress.hostBased.tls | indent 2 }}
+  {{- end -}}
+  {{- end }}
+  {{- if .Values.ingress.pathBased.tls }}
+{{ toYaml .Values.ingress.pathBased.tls | indent 2 }}
+  {{- end -}}
+{{- end -}}
