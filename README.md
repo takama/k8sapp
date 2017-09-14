@@ -103,7 +103,7 @@ Generating certificates to create a secure SSL connection in the `Go` client. At
 FROM scratch
 
 ENV K8SAPP_LOCAL_HOST 0.0.0.0
-ENV K8SAPP_LOCAL_PORT 3000
+ENV K8SAPP_LOCAL_PORT 8080
 ENV K8SAPP_LOG_LEVEL 0
 
 EXPOSE $K8SAPP_LOCAL_PORT

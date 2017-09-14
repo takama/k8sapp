@@ -16,8 +16,15 @@ K8SAPP_LOCAL_HOST?=0.0.0.0
 K8SAPP_LOCAL_PORT?=8080
 K8SAPP_LOG_LEVEL?=0
 
+# Namespace: dev, prod, release, cte, username ...
+NAMESPACE?=cte
+
+# Infrastructure: dev, stable, test ...
+INFRASTRUCTURE?=stable
+VALUES?=values-${INFRASTRUCTURE}
+
 CONTAINER_IMAGE?=${REGISTRY}/${APP}
-CONTAINER_NAME?=${APP}
+CONTAINER_NAME?=${APP}-${NAMESPACE}
 
 REPO_INFO=$(shell git config --get remote.origin.url)
 
@@ -94,6 +101,10 @@ ifdef HAS_EXITED
 	@echo "+ $@"
 	@docker rm ${CONTAINER_NAME}
 endif
+
+.PHONY: deploy
+deploy: push
+	helm upgrade ${CONTAINER_NAME} -f charts/${VALUES}.yaml charts --kube-context ${INFRASTRUCTURE} --namespace ${NAMESPACE} --version=${RELEASE} -i --wait
 
 GO_LIST_FILES=$(shell go list ${PROJECT}/... | grep -v vendor)
 

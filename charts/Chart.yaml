@@ -1,0 +1,10 @@
+name: k8sapp
+description: A Helm charts for Kubernetes application
+version: 0.3.0
+home: https://my.domain/
+sources:
+  - https://github.com/takama/k8sapp
+maintainers:
+  - name: Igor Dolzhikov
+    email: bluesriverz@gmail.com
+engine: gotpl
