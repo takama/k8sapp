@@ -9,6 +9,7 @@ import (
 	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/logger"
 	"github.com/takama/k8sapp/pkg/logger/standard"
+	"github.com/takama/k8sapp/pkg/router"
 	"github.com/takama/k8sapp/pkg/router/bitroute"
 	"github.com/takama/k8sapp/pkg/version"
 )
@@ -37,4 +38,23 @@ func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) 
 	if trw.Body.String() != body {
 		t.Error("Expected body", body, "got", trw.Body.String())
 	}
+}
+
+func TestCollectCodes(t *testing.T) {
+	h := New(standard.New(&logger.Config{}), new(config.Config))
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.Base(func(c router.Control) {
+			c.Code(http.StatusBadGateway)
+			c.Write(http.StatusText(http.StatusBadGateway))
+		})(bitroute.NewControl(w, r))
+	})
+	testHandler(t, handler, http.StatusBadGateway, http.StatusText(http.StatusBadGateway))
+
+	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.Base(func(c router.Control) {
+			c.Code(http.StatusNotFound)
+			c.Write(http.StatusText(http.StatusNotFound))
+		})(bitroute.NewControl(w, r))
+	})
+	testHandler(t, handler, http.StatusNotFound, http.StatusText(http.StatusNotFound))
 }

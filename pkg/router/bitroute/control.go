@@ -66,6 +66,11 @@ func (c *control) Code(code int) {
 	}
 }
 
+// GetCode shows HTTP status code that set by Code()
+func (c *control) GetCode() int {
+	return c.code
+}
+
 // Write writes data into http output.
 func (c *control) Write(data interface{}) {
 	var content []byte

@@ -71,6 +71,15 @@ func TestWriterCode(t *testing.T) {
 	}
 }
 
+func TestGetCode(t *testing.T) {
+	c := new(control)
+	c.Code(http.StatusOK)
+	code := c.GetCode()
+	if code != http.StatusOK {
+		t.Error("Expected code", http.StatusText(http.StatusOK), "got", code)
+	}
+}
+
 func TestWrite(t *testing.T) {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
