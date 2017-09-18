@@ -5,6 +5,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/handlers"
 	"github.com/takama/k8sapp/pkg/logger"
@@ -33,6 +35,9 @@ func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error)
 	// Register new router
 	r = bitroute.New()
 
+	// Response for undefined methods
+	r.SetupNotFoundHandler(h.Base(notFound))
+
 	// Configure router
 	r.SetupMiddleware(h.Base)
 	r.GET("/", h.Root)
@@ -41,4 +46,10 @@ func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error)
 	r.GET("/info", h.Info)
 
 	return
+}
+
+// Response for undefined methods
+func notFound(c router.Control) {
+	c.Code(http.StatusNotFound)
+	c.Write("Method not found for " + c.Request().URL.Path)
 }
