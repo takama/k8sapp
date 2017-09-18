@@ -1,12 +1,16 @@
 package service
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/takama/k8sapp/pkg/config"
+	"github.com/takama/k8sapp/pkg/handlers"
+	"github.com/takama/k8sapp/pkg/router/bitroute"
 )
 
-func TestRun(t *testing.T) {
+func TestSetup(t *testing.T) {
 	cfg := new(config.Config)
 	err := cfg.Load(config.SERVICENAME)
 	if err != nil {
@@ -21,5 +25,22 @@ func TestRun(t *testing.T) {
 	}
 	if logger == nil {
 		t.Error("Expected new logger, got nil")
+	}
+
+	h := handlers.New(logger, cfg)
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.Base(notFound)(bitroute.NewControl(w, r))
+	})
+
+	req, err := http.NewRequest("GET", "/notfound", nil)
+	if err != nil {
+		t.Error(err)
+	}
+
+	trw := httptest.NewRecorder()
+	handler.ServeHTTP(trw, req)
+
+	if trw.Code != http.StatusNotFound {
+		t.Error("Expected status:", http.StatusNotFound, "got", trw.Code)
 	}
 }
