@@ -15,9 +15,9 @@ import (
 )
 
 // Setup configures the service
-func Setup(cfg *config.Config) (r router.BitRoute, err error) {
+func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error) {
 	// Setup logger
-	log := stdlog.New(&logger.Config{
+	log = stdlog.New(&logger.Config{
 		Level: cfg.LogLevel,
 		Time:  true,
 		UTC:   true,
