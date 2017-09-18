@@ -28,6 +28,9 @@ type Control interface {
 	// Code sets HTTP status code e.g. http.StatusOk
 	Code(code int)
 
+	// GetCode shows HTTP status code that set by Code()
+	GetCode() int
+
 	// Write prepared header, status code and body data into http output.
 	Write(data interface{})
 
