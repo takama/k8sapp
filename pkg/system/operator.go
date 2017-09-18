@@ -4,6 +4,11 @@
 
 package system
 
+import "errors"
+
+// ErrNotImplemented declares error for method that isn't implemented
+var ErrNotImplemented = errors.New("This method is not implemented")
+
 // Operator defines reload, maintenance and shutdown interface
 type Operator interface {
 	Reload() error
@@ -14,17 +19,17 @@ type Operator interface {
 // Handling implements simplest Operator interface
 type Handling struct{}
 
-// Reload implementation
+// Reload operation implementation
 func (h Handling) Reload() error {
-	return nil
+	return ErrNotImplemented
 }
 
-// Maintenance implementation
+// Maintenance operation implementation
 func (h Handling) Maintenance() error {
-	return nil
+	return ErrNotImplemented
 }
 
-// Shutdown implementation
+// Shutdown operation implementation
 func (h Handling) Shutdown() error {
-	return nil
+	return ErrNotImplemented
 }
