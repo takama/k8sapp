@@ -1,6 +1,17 @@
-# Version 0.3.1
+# Version 0.4.0
 
 [Documentation](README.md)
+
+## Changelog since 0.3.1
+
+### Documentation
+
+- Renewed demo images
+
+### Codebase
+
+- Added info handler which contains detailed statistics with HTTP codes ([#30](https://github.com/takama/k8sapp/pull/30), [@takama](https://github.com/takama))
+- Added system signals handling (reload, shutdown, maintenance)  ([#31](https://github.com/takama/k8sapp/pull/31), [@takama](https://github.com/takama))
 
 ## Changelog since 0.3.0
 
