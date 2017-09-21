@@ -66,7 +66,7 @@ func (h *Handler) Info(c router.Control) {
 	runtime.ReadMemStats(m)
 
 	c.Code(http.StatusOK)
-	c.Write(Status{
+	c.Body(Status{
 		Host:     host,
 		Version:  version.RELEASE,
 		Commit:   version.COMMIT,

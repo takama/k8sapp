@@ -1,6 +1,12 @@
-# Version 0.4.1
+# Version 0.4.2
 
 [Documentation](README.md)
+
+## Changelog since 0.4.1
+
+### Codebase
+
+- Implemented http.ResponseWriter interface in BitRoute Control ([#35](https://github.com/takama/k8sapp/pull/35), [@takama](https://github.com/takama))
 
 ## Changelog since 0.4.0
 

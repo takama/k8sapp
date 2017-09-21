@@ -45,7 +45,7 @@ func TestCollectCodes(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(func(c router.Control) {
 			c.Code(http.StatusBadGateway)
-			c.Write(http.StatusText(http.StatusBadGateway))
+			c.Body(http.StatusText(http.StatusBadGateway))
 		})(bitroute.NewControl(w, r))
 	})
 	testHandler(t, handler, http.StatusBadGateway, http.StatusText(http.StatusBadGateway))
@@ -53,7 +53,7 @@ func TestCollectCodes(t *testing.T) {
 	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(func(c router.Control) {
 			c.Code(http.StatusNotFound)
-			c.Write(http.StatusText(http.StatusNotFound))
+			c.Body(http.StatusText(http.StatusNotFound))
 		})(bitroute.NewControl(w, r))
 	})
 	testHandler(t, handler, http.StatusNotFound, http.StatusText(http.StatusNotFound))

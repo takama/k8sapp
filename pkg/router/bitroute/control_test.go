@@ -87,7 +87,17 @@ func TestWrite(t *testing.T) {
 	}
 	trw := httptest.NewRecorder()
 	c := NewControl(trw, req)
-	c.Write("Hello")
+	c.WriteHeader(http.StatusAccepted)
+	c.Write([]byte("Testing"))
+	if trw.Code != http.StatusAccepted {
+		t.Error("Expected", http.StatusAccepted, "got", trw.Code)
+	}
+	if trw.Body.String() != "Testing" {
+		t.Error("Expected", "Testing", "got", trw.Body.String())
+	}
+	trw = httptest.NewRecorder()
+	c = NewControl(trw, req)
+	c.Body("Hello")
 	if trw.Body.String() != "Hello" {
 		t.Error("Expected", "Hello", "got", trw.Body.String())
 	}
@@ -99,7 +109,7 @@ func TestWrite(t *testing.T) {
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
 	c.Code(http.StatusOK)
-	c.Write(params)
+	c.Body(params)
 	if trw.Body.String() != testParamsData {
 		t.Error("Expected", testParamsData, "got", trw.Body.String())
 	}
@@ -112,7 +122,7 @@ func TestWrite(t *testing.T) {
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
 	c.Code(http.StatusAccepted)
-	c.Write(params)
+	c.Body(params)
 	if trw.Body.String() != string(testParamGzipData) {
 		t.Error("Expected", testParamGzipData, "got", trw.Body.String())
 	}
@@ -123,7 +133,7 @@ func TestWrite(t *testing.T) {
 	}
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
-	c.Write(func() {})
+	c.Body(func() {})
 	if trw.Code != http.StatusInternalServerError {
 		t.Error("Expected", http.StatusInternalServerError, "got", trw.Code)
 	}

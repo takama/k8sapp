@@ -36,6 +36,22 @@ func (c *control) Request() *http.Request {
 	return c.req
 }
 
+// Response writer implementation
+// Header represents http.ResponseWriter header, the key-value pairs in an HTTP header.
+func (c *control) Header() http.Header {
+	return c.w.Header()
+}
+
+// Write writes the data to the connection as part of an HTTP reply.
+func (c *control) Write(b []byte) (int, error) {
+	return c.w.Write(b)
+}
+
+// WriteHeader sends an HTTP response header with status code.
+func (c *control) WriteHeader(code int) {
+	c.w.WriteHeader(code)
+}
+
 // Query searches URL/Post value by key.
 // If there are no values associated with the key, an empty string is returned.
 func (c *control) Query(key string) string {
@@ -53,12 +69,6 @@ func (c *control) Param(key, value string) {
 	c.params = append(c.params, struct{ key, value string }{key: key, value: value})
 }
 
-// Response writer section
-// Header represents http.ResponseWriter header, the key-value pairs in an HTTP header.
-func (c *control) Header() http.Header {
-	return c.w.Header()
-}
-
 // Code sets HTTP status code e.g. http.StatusOk
 func (c *control) Code(code int) {
 	if code >= 100 && code < 600 {
@@ -71,8 +81,10 @@ func (c *control) GetCode() int {
 	return c.code
 }
 
-// Write writes data into http output.
-func (c *control) Write(data interface{}) {
+// Body writes prepared header, status code and body data into http output.
+// It is equal to using sequence of http.ResponseWriter methods:
+// WriteHeader(code int) and Write(b []byte) int, error
+func (c *control) Body(data interface{}) {
 	var content []byte
 
 	if str, ok := data.(string); ok {
