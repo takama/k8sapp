@@ -1,6 +1,12 @@
-# Version 0.4.2
+# Version 0.4.3
 
 [Documentation](README.md)
+
+## Changelog since 0.4.2
+
+### Codebase
+
+- Fixed of creating certificates in non-existing directory ([@takama](https://github.com/takama))
 
 ## Changelog since 0.4.1
 
