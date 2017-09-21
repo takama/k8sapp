@@ -20,19 +20,19 @@ type Control interface {
 	// Param sets URL/Post key/value query parameters.
 	Param(key, value string)
 
-	// Response writer section
-
-	// Header represents http.ResponseWriter header, the key-value pairs in an HTTP header.
-	Header() http.Header
-
 	// Code sets HTTP status code e.g. http.StatusOk
 	Code(code int)
 
 	// GetCode shows HTTP status code that set by Code()
 	GetCode() int
 
-	// Write prepared header, status code and body data into http output.
-	Write(data interface{})
+	// Body writes prepared header, status code and body data into http output.
+	// It is equal to using sequence of http.ResponseWriter methods:
+	// WriteHeader(code int) and Write(b []byte) int, error
+	Body(data interface{})
+
+	// Embedded response writer
+	http.ResponseWriter
 
 	// TODO Add more control methods.
 }
