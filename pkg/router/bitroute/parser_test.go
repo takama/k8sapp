@@ -25,55 +25,55 @@ var setOfRegistered = []registered{
 	{
 		"/hello/John",
 		func(c router.Control) {
-			c.Write("Hello from static path")
+			c.Body("Hello from static path")
 		},
 	},
 	{
 		"/hello/:name",
 		func(c router.Control) {
-			c.Write("Hello " + c.Query(":name"))
+			c.Body("Hello " + c.Query(":name"))
 		},
 	},
 	{
 		"/:h/:n",
 		func(c router.Control) {
-			c.Write(c.Query(":n") + " from " + c.Query(":h"))
+			c.Body(c.Query(":n") + " from " + c.Query(":h"))
 		},
 	},
 	{
 		"/products/book/orders/:id",
 		func(c router.Control) {
-			c.Write("Product: book order# " + c.Query(":id"))
+			c.Body("Product: book order# " + c.Query(":id"))
 		},
 	},
 	{
 		"/products/:name/orders/:id",
 		func(c router.Control) {
-			c.Write("Product: " + c.Query(":name") + " order# " + c.Query(":id"))
+			c.Body("Product: " + c.Query(":name") + " order# " + c.Query(":id"))
 		},
 	},
 	{
 		"/products/:name/:order/:id",
 		func(c router.Control) {
-			c.Write("Product: " + c.Query(":name") + " # " + c.Query(":id"))
+			c.Body("Product: " + c.Query(":name") + " # " + c.Query(":id"))
 		},
 	},
 	{
 		"/:product/:name/:order/:id",
 		func(c router.Control) {
-			c.Write(c.Query(":product") + " " + c.Query(":name") + " " + c.Query(":order") + " # " + c.Query(":id"))
+			c.Body(c.Query(":product") + " " + c.Query(":name") + " " + c.Query(":order") + " # " + c.Query(":id"))
 		},
 	},
 	{
 		"/static/*",
 		func(c router.Control) {
-			c.Write("Hello from star static path")
+			c.Body("Hello from star static path")
 		},
 	},
 	{
 		"/files/:dir/*",
 		func(c router.Control) {
-			c.Write(c.Query(":dir"))
+			c.Body(c.Query(":dir"))
 		},
 	},
 }
@@ -282,7 +282,7 @@ func TestRegisterAsterisk(t *testing.T) {
 	data := "Any path is ok"
 	p := newParser()
 	p.register("*", func(c router.Control) {
-		c.Write(data)
+		c.Body(data)
 	})
 	path := "/any/path/is/ok"
 	h, params, ok := p.get(path)
