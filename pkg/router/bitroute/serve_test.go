@@ -32,7 +32,7 @@ func TestRouterGetRootStatic(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler for root static path
 	r.GET("/", func(c router.Control) {
-		c.Write("Root")
+		c.Body("Root")
 	})
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
@@ -49,7 +49,7 @@ func TestRouterGetStatic(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler for static path
 	r.GET("/hello", func(c router.Control) {
-		c.Write("Hello")
+		c.Body("Hello")
 	})
 	req, err := http.NewRequest("GET", "/hello", nil)
 	if err != nil {
@@ -66,7 +66,7 @@ func TestRouterGetParameter(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler with parameter
 	r.GET("/hello/:name", func(c router.Control) {
-		c.Write("Hello " + c.Query(":name"))
+		c.Body("Hello " + c.Query(":name"))
 	})
 	req, err := http.NewRequest("GET", "/hello/John", nil)
 	if err != nil {
@@ -83,7 +83,7 @@ func TestRouterGetParameterFromClassicUrl(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers GET handler with two parameters
 	r.GET("/users/:name", func(c router.Control) {
-		c.Write("Users: " + c.Query(":name") + " " + c.Query("name"))
+		c.Body("Users: " + c.Query(":name") + " " + c.Query("name"))
 	})
 	req, err := http.NewRequest("GET", "/users/Jane/?name=Joe", nil)
 	if err != nil {
@@ -108,7 +108,7 @@ func TestRouterPostJSONData(t *testing.T) {
 		if err := json.Unmarshal(body, &values); err != nil {
 			t.Error(err)
 		}
-		c.Write("User: " + values["name"])
+		c.Body("User: " + values["name"])
 	})
 	req, err := http.NewRequest("POST", "/users/", strings.NewReader(`{"name": "Tom"}`))
 	if err != nil {
@@ -133,7 +133,7 @@ func TestRouterPutJSONData(t *testing.T) {
 		if err := json.Unmarshal(body, &values); err != nil {
 			t.Error(err)
 		}
-		c.Write("Users: " + values["name1"] + " " + values["name2"])
+		c.Body("Users: " + values["name1"] + " " + values["name2"])
 	})
 	req, err := http.NewRequest("PUT", "/users/", strings.NewReader(`{"name1": "user1", "name2": "user2"}`))
 	if err != nil {
@@ -150,7 +150,7 @@ func TestRouterDelete(t *testing.T) {
 	r := getRouterForTesting()
 	// Registers DELETE handler
 	r.DELETE("/users", func(c router.Control) {
-		c.Write("Users deleted")
+		c.Body("Users deleted")
 	})
 	req, err := http.NewRequest("DELETE", "/users/", nil)
 	if err != nil {
@@ -337,7 +337,7 @@ func TestRouterSetupNotAllowedHandler(t *testing.T) {
 	})
 	r.SetupNotAllowedHandler(func(c router.Control) {
 		c.Code(http.StatusForbidden)
-		c.Write(message)
+		c.Body(message)
 	})
 	req, err := http.NewRequest("PUT", path, nil)
 	if err != nil {
@@ -364,7 +364,7 @@ func TestRouterSetupNotFound(t *testing.T) {
 	message := http.StatusText(http.StatusForbidden)
 	r.SetupNotFoundHandler(func(c router.Control) {
 		c.Code(http.StatusForbidden)
-		c.Write(message)
+		c.Body(message)
 	})
 	req, err := http.NewRequest("GET", "/not/found", nil)
 	if err != nil {
@@ -390,7 +390,7 @@ func TestRouterRecoveryHandler(t *testing.T) {
 	})
 	r.SetupRecoveryHandler(func(c router.Control) {
 		c.Code(http.StatusServiceUnavailable)
-		c.Write(message)
+		c.Body(message)
 	})
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
@@ -413,7 +413,7 @@ func TestRouterMiddleware(t *testing.T) {
 	path := "/middleware"
 	r.GET(path, func(c router.Control) {
 		c.Code(http.StatusOK)
-		c.Write(message)
+		c.Body(message)
 	})
 	r.SetupMiddleware(func(f func(router.Control)) func(router.Control) {
 		return func(c router.Control) {

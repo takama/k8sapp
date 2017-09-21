@@ -57,7 +57,7 @@ func (h *Handler) Base(handle func(router.Control)) func(router.Control) {
 // Root handler shows version
 func (h *Handler) Root(c router.Control) {
 	c.Code(http.StatusOK)
-	c.Write(fmt.Sprintf("%s v%s", config.SERVICENAME, version.RELEASE))
+	c.Body(fmt.Sprintf("%s v%s", config.SERVICENAME, version.RELEASE))
 }
 
 func (h *Handler) countDuration(timer time.Time) {

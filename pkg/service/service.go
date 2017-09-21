@@ -51,5 +51,5 @@ func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error)
 // Response for undefined methods
 func notFound(c router.Control) {
 	c.Code(http.StatusNotFound)
-	c.Write("Method not found for " + c.Request().URL.Path)
+	c.Body("Method not found for " + c.Request().URL.Path)
 }
