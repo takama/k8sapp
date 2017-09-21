@@ -1,6 +1,12 @@
-# Version 0.4.3
+# Version 0.4.4
 
 [Documentation](README.md)
+
+## Changelog since 0.4.3
+
+### Codebase
+
+- Fixed certs directory inside a container ([@takama](https://github.com/takama))
 
 ## Changelog since 0.4.2
 
