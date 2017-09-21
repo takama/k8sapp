@@ -8,7 +8,7 @@ REGISTRY?=docker.io/takama
 CA_DIR?=certs
 
 # Use the 0.0.0 tag for testing, it shouldn't clobber any release builds
-RELEASE?=0.4.2
+RELEASE?=0.4.3
 GOOS?=linux
 GOARCH?=amd64
 
@@ -55,6 +55,7 @@ ifeq ("$(wildcard $(CA_DIR)/ca-certificates.crt)","")
 	@echo "+ $@"
 	@docker run --name ${CONTAINER_NAME}-certs -d alpine:edge sh -c "apk --update upgrade && apk add ca-certificates && update-ca-certificates"
 	@docker wait ${CONTAINER_NAME}-certs
+	@mkdir -p ${CA_DIR}
 	@docker cp ${CONTAINER_NAME}-certs:/etc/ssl/certs/ca-certificates.crt ${CA_DIR}
 	@docker rm -f ${CONTAINER_NAME}-certs
 endif
