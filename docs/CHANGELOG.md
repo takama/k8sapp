@@ -1,6 +1,12 @@
-# Version 0.4.4
+# Version 0.4.5
 
 [Documentation](README.md)
+
+## Changelog since 0.4.4
+
+### Codebase
+
+- Fixed #37: correct content type for encoded data ([#38](https://github.com/takama/k8sapp/pull/38), [@takama](https://github.com/takama))
 
 ## Changelog since 0.4.3
 

@@ -8,7 +8,7 @@ REGISTRY?=docker.io/takama
 CA_DIR?=certs
 
 # Use the 0.0.0 tag for testing, it shouldn't clobber any release builds
-RELEASE?=0.4.4
+RELEASE?=0.4.5
 GOOS?=linux
 GOARCH?=amd64
 
