@@ -102,6 +102,10 @@ func (c *control) Body(data interface{}) {
 		}
 	}
 	if strings.Contains(c.req.Header.Get("Accept-Encoding"), "gzip") {
+		// Detect content type before encoding if it isn't defined
+		if c.w.Header().Get("Content-type") == "" {
+			c.w.Header().Set("Content-type", http.DetectContentType(content))
+		}
 		c.w.Header().Add("Content-Encoding", "gzip")
 		if c.code > 0 {
 			c.w.WriteHeader(c.code)
