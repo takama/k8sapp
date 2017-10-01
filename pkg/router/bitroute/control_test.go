@@ -23,6 +23,11 @@ var testParamGzipData = []byte{
 	83, 170, 213, 129, 201, 38, 166, 35, 75, 26, 27, 33, 73, 165, 167, 230, 165, 164,
 	22, 33, 201, 250, 42, 213, 198, 2, 2, 0, 0, 255, 255, 196, 73, 247, 37, 87, 0, 0, 0,
 }
+var testStrData = "plain text"
+var testStrGzipData = []byte{
+	31, 139, 8, 0, 0, 0, 0, 0, 0, 255, 42, 200, 73, 204, 204, 83, 40,
+	73, 173, 40, 1, 4, 0, 0, 255, 255, 184, 15, 11, 68, 10, 0, 0, 0,
+}
 
 func TestParamsQueryGet(t *testing.T) {
 
@@ -47,7 +52,7 @@ func TestWriterHeader(t *testing.T) {
 	c := NewControl(trw, req)
 	request := c.Request()
 	if request != req {
-		t.Error("Expected", req.URL.String(), "got", request.URL.String())
+		t.Error("Expected", req.URL.String(), "got", request.URL)
 	}
 	trw.Header().Add("Test", "TestValue")
 	c = NewControl(trw, req)
@@ -85,6 +90,8 @@ func TestWrite(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	// Write data using http.ResponseWriter
 	trw := httptest.NewRecorder()
 	c := NewControl(trw, req)
 	c.WriteHeader(http.StatusAccepted)
@@ -93,44 +100,67 @@ func TestWrite(t *testing.T) {
 		t.Error("Expected", http.StatusAccepted, "got", trw.Code)
 	}
 	if trw.Body.String() != "Testing" {
-		t.Error("Expected", "Testing", "got", trw.Body.String())
+		t.Error("Expected", "Testing", "got", trw.Body)
 	}
+
+	// Write plain text data
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
 	c.Body("Hello")
 	if trw.Body.String() != "Hello" {
-		t.Error("Expected", "Hello", "got", trw.Body.String())
+		t.Error("Expected", "Hello", "got", trw.Body)
 	}
 	contentType := trw.Header().Get("Content-type")
 	expected := "text/plain; charset=utf-8"
 	if contentType != expected {
 		t.Error("Expected", expected, "got", contentType)
 	}
+
+	// Write JSON compatible data
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
 	c.Code(http.StatusOK)
 	c.Body(params)
 	if trw.Body.String() != testParamsData {
-		t.Error("Expected", testParamsData, "got", trw.Body.String())
+		t.Error("Expected", testParamsData, "got", trw.Body)
 	}
 	contentType = trw.Header().Get("Content-type")
 	expected = "application/json"
 	if contentType != expected {
 		t.Error("Expected", expected, "got", contentType)
 	}
+
+	// Write encoded string
 	req.Header.Add("Accept-Encoding", "gzip, deflate")
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
 	c.Code(http.StatusAccepted)
-	c.Body(params)
-	if trw.Body.String() != string(testParamGzipData) {
-		t.Error("Expected", testParamGzipData, "got", trw.Body.String())
+	c.Body(testStrData)
+	if trw.Body.String() != string(testStrGzipData) {
+		t.Error("Expected", testStrGzipData, "got", trw.Body)
 	}
 	contentEncoding := trw.Header().Get("Content-Encoding")
 	expected = "gzip"
 	if contentEncoding != expected {
 		t.Error("Expected", expected, "got", contentEncoding)
 	}
+
+	// Write encoded struct data
+	req.Header.Add("Accept-Encoding", "gzip, deflate")
+	trw = httptest.NewRecorder()
+	c = NewControl(trw, req)
+	c.Code(http.StatusAccepted)
+	c.Body(params)
+	if trw.Body.String() != string(testParamGzipData) {
+		t.Error("Expected", testParamGzipData, "got", trw.Body)
+	}
+	contentEncoding = trw.Header().Get("Content-Encoding")
+	expected = "gzip"
+	if contentEncoding != expected {
+		t.Error("Expected", expected, "got", contentEncoding)
+	}
+
+	// Try to write unexpected data type
 	trw = httptest.NewRecorder()
 	c = NewControl(trw, req)
 	c.Body(func() {})
