@@ -7,11 +7,13 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/takama/k8sapp/pkg/router"
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 )
 
 // Ready returns "OK" if service is ready to serve traffic
-func (h *Handler) Ready(c router.Control) {
+func (h *Handler) Ready(c bit.Control) {
 	// TODO: possible use cases:
 	// load data from a database, a message broker, any external services, etc
 

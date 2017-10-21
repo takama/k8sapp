@@ -6,17 +6,19 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/logger"
 	"github.com/takama/k8sapp/pkg/logger/standard"
-	"github.com/takama/k8sapp/pkg/router/bitroute"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
 func TestInfo(t *testing.T) {
 	h := New(standard.New(&logger.Config{}), new(config.Config))
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(h.Info)(bitroute.NewControl(w, r))
+		h.Base(h.Info)(bit.NewControl(w, r))
 	})
 
 	req, err := http.NewRequest("GET", "/", nil)

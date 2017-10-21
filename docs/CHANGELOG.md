@@ -1,6 +1,13 @@
-# Version 0.4.5
+# Version 0.4.6
 
 [Documentation](README.md)
+
+
+## Changelog since 0.4.5
+
+### Codebase
+
+- Released #34: move embedded http router into external package ([#39](https://github.com/takama/k8sapp/pull/39), [@takama](https://github.com/takama))
 
 ## Changelog since 0.4.4
 

@@ -9,7 +9,7 @@
 [[projects]]
   name = "github.com/kelseyhightower/envconfig"
   packages = ["."]
-  revision = "70f0258d44cbaa3b6a2581d82f58da01a38e4de4"
+  revision = "462fda1f11d8cad3660e52737b8beefd27acfb3f"
 
 [[projects]]
   name = "github.com/rs/xhandler"
@@ -35,6 +35,12 @@
   version = "v1.0.3"
 
 [[projects]]
+  name = "github.com/takama/bit"
+  packages = ["."]
+  revision = "a8e9c17d8de050aec0aa8b55a507eeaa08741320"
+  version = "0.2.3"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
@@ -55,6 +61,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e59ccb0cbb49d6ee79d6526fbc5be075343a1f24c46c3aa2c74d1e6c89f09ece"
+  inputs-digest = "cd21dc84b9fce104ffaab4872754cf3bd2b46c6ffa5bf128294af36c542d4c1d"
   solver-name = "gps-cdcl"
   solver-version = 1
