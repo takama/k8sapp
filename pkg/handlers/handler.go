@@ -9,9 +9,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/logger"
-	"github.com/takama/k8sapp/pkg/router"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
@@ -45,8 +47,8 @@ func New(logger logger.Logger, config *config.Config) *Handler {
 }
 
 // Base handler implements middleware logic
-func (h *Handler) Base(handle func(router.Control)) func(router.Control) {
-	return func(c router.Control) {
+func (h *Handler) Base(handle func(bit.Control)) func(bit.Control) {
+	return func(c bit.Control) {
 		timer := time.Now()
 		handle(c)
 		h.countDuration(timer)
@@ -55,7 +57,7 @@ func (h *Handler) Base(handle func(router.Control)) func(router.Control) {
 }
 
 // Root handler shows version
-func (h *Handler) Root(c router.Control) {
+func (h *Handler) Root(c bit.Control) {
 	c.Code(http.StatusOK)
 	c.Body(fmt.Sprintf("%s v%s", config.SERVICENAME, version.RELEASE))
 }
@@ -75,7 +77,7 @@ func (h *Handler) countDuration(timer time.Time) {
 	}
 }
 
-func (h *Handler) collectCodes(c router.Control) {
+func (h *Handler) collectCodes(c bit.Control) {
 	if c.GetCode() >= 500 {
 		h.stats.requests.Codes.C5xx++
 	} else {

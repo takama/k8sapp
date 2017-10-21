@@ -5,9 +5,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/handlers"
-	"github.com/takama/k8sapp/pkg/router/bitroute"
 )
 
 func TestSetup(t *testing.T) {
@@ -29,7 +31,7 @@ func TestSetup(t *testing.T) {
 
 	h := handlers.New(logger, cfg)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(notFound)(bitroute.NewControl(w, r))
+		h.Base(notFound)(bit.NewControl(w, r))
 	})
 
 	req, err := http.NewRequest("GET", "/notfound", nil)

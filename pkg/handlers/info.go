@@ -11,7 +11,9 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/takama/k8sapp/pkg/router"
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
@@ -60,7 +62,7 @@ type Codes struct {
 }
 
 // Info returns detailed info about the service
-func (h *Handler) Info(c router.Control) {
+func (h *Handler) Info(c bit.Control) {
 	host, _ := os.Hostname()
 	m := new(runtime.MemStats)
 	runtime.ReadMemStats(m)

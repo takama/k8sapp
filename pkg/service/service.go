@@ -7,17 +7,18 @@ package service
 import (
 	"net/http"
 
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 	"github.com/takama/k8sapp/pkg/config"
 	"github.com/takama/k8sapp/pkg/handlers"
 	"github.com/takama/k8sapp/pkg/logger"
 	stdlog "github.com/takama/k8sapp/pkg/logger/standard"
-	"github.com/takama/k8sapp/pkg/router"
-	"github.com/takama/k8sapp/pkg/router/bitroute"
 	"github.com/takama/k8sapp/pkg/version"
 )
 
 // Setup configures the service
-func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error) {
+func Setup(cfg *config.Config) (r bit.Router, log logger.Logger, err error) {
 	// Setup logger
 	log = stdlog.New(&logger.Config{
 		Level: cfg.LogLevel,
@@ -33,7 +34,7 @@ func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error)
 	h := handlers.New(log, cfg)
 
 	// Register new router
-	r = bitroute.New()
+	r = bit.NewRouter()
 
 	// Response for undefined methods
 	r.SetupNotFoundHandler(h.Base(notFound))
@@ -49,7 +50,7 @@ func Setup(cfg *config.Config) (r router.BitRoute, log logger.Logger, err error)
 }
 
 // Response for undefined methods
-func notFound(c router.Control) {
+func notFound(c bit.Control) {
 	c.Code(http.StatusNotFound)
 	c.Body("Method not found for " + c.Request().URL.Path)
 }
