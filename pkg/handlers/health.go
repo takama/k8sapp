@@ -7,11 +7,13 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/takama/k8sapp/pkg/router"
+	"github.com/takama/bit"
+	// Alternative of the Bit router with the same Router interface
+	// "github.com/takama/k8sapp/pkg/router/httprouter"
 )
 
 // Health returns "OK" if service is alive
-func (h *Handler) Health(c router.Control) {
+func (h *Handler) Health(c bit.Control) {
 	c.Code(http.StatusOK)
 	c.Body(http.StatusText(http.StatusOK))
 }
