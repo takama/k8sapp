@@ -1,7 +1,13 @@
-# Version 0.4.6
+# Version 0.5.0
 
 [Documentation](README.md)
 
+## Changelog since 0.4.6
+
+### Configuration
+
+- Fixed #40 alpine image for installing certificates ([#41](https://github.com/takama/k8sapp/pull/41), [@takama](https://github.com/takama))
+- Released version without embedded router
 
 ## Changelog since 0.4.5
 
