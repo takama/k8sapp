@@ -54,7 +54,6 @@ func TestSignals(t *testing.T) {
 	shutdownSignals := signals.Get(Shutdown)
 	verifySignal(t, syscall.SIGTERM, shutdownSignals, Shutdown)
 	verifySignal(t, syscall.SIGINT, shutdownSignals, Shutdown)
-	verifySignal(t, syscall.SIGKILL, shutdownSignals, Shutdown)
 	reloadSignals := signals.Get(Reload)
 	verifySignal(t, syscall.SIGHUP, reloadSignals, Reload)
 	maintenanceSignals := signals.Get(Maintenance)
