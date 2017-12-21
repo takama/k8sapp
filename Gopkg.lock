@@ -37,8 +37,8 @@
 [[projects]]
   name = "github.com/takama/bit"
   packages = ["."]
-  revision = "a8e9c17d8de050aec0aa8b55a507eeaa08741320"
-  version = "0.2.3"
+  revision = "2cdb1c532baced0c8c18000bc4cb66907b0dff3e"
+  version = "0.3.0"
 
 [[projects]]
   branch = "master"
@@ -61,6 +61,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cd21dc84b9fce104ffaab4872754cf3bd2b46c6ffa5bf128294af36c542d4c1d"
+  inputs-digest = "7fe459c48eab921817ee6ba0e5c7015c1ef663439031bea702e22a56a7258950"
   solver-name = "gps-cdcl"
   solver-version = 1
