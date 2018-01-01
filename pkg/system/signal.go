@@ -60,7 +60,7 @@ func NewSignals() *Signals {
 		interrupt: make(chan os.Signal, 1),
 		quit:      make(chan struct{}, 1),
 
-		shutdown:    []os.Signal{syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM},
+		shutdown:    []os.Signal{syscall.SIGINT, syscall.SIGTERM},
 		reload:      []os.Signal{syscall.SIGHUP},
 		maintenance: []os.Signal{syscall.SIGUSR1},
 	}

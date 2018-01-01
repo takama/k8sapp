@@ -1,6 +1,13 @@
-# Version 0.5.0
+# Version 0.5.1
 
 [Documentation](README.md)
+
+## Changelog since 0.5.0
+
+### Codebase
+
+- Excluded `SIGKILL` signal from list of handled signals ([#43](https://github.com/takama/k8sapp/pull/43), [@rumyantseva](https://github.com/rumyantseva))
+- Updated dependency for BitRoute version 0.3.0 ([#45](https://github.com/takama/k8sapp/pull/45), [@takama](https://github.com/takama))
 
 ## Changelog since 0.4.6
 
