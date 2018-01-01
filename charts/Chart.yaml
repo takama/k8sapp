@@ -1,6 +1,6 @@
 name: k8sapp
 description: A Helm charts for Kubernetes application
-version: 0.5.0
+version: 0.5.1
 home: https://my.domain/
 sources:
   - https://github.com/takama/k8sapp
